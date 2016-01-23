@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="RegExp.hpp" />
+    <ClInclude Include="RegExpParser.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="String.hpp" />
   </ItemGroup>

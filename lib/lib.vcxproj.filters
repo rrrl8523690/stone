@@ -36,6 +36,9 @@
     <ClInclude Include="RegExp.hpp">
       <Filter>头文件\re</Filter>
     </ClInclude>
+    <ClInclude Include="RegExpParser.hpp">
+      <Filter>头文件\re</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
