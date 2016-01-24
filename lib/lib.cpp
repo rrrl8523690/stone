@@ -4,11 +4,12 @@
 #include "stdafx.h"
 #include "Array.hpp"
 #include "String.hpp"
+#include "ArrayUnitTest.hpp"
 
 
-int main()
-{
-	ds::String<> a("sdfsad");
-    return 0;
+int main() {
+	ArrayUnitTest a;
+	a.run();
+	return 0;
 }
 

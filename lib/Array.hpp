@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
+#include <iostream>
 
 namespace ds {
 	template<class T>
@@ -8,13 +9,24 @@ namespace ds {
 	public:
 		Array();
 		Array(const uint& intialSize);
+		Array(T fromArray[], const uint& arraySize);
 		~Array();
-		uint size();
+		uint size() const;
 		void resize(const uint& newSize);
+		void setMaxSize(const uint& newMaxSize);
 		T& at(const uint& index);
 		Array<T>& append(const T& item);
 		Array<T>& clear();
 
+		friend std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
+			os << "{";
+			for (uint i = 0; i < arr.size(); i++) {
+				if (i) os << ", ";
+				os << arr[i];
+			}
+			os << "}";
+			return os;
+		}
 		T& operator[](const uint& index);
 		const T &operator[](const uint& index) const;
 		Array<T> operator+(const Array<T>& anotherArray) const;
@@ -45,12 +57,19 @@ namespace ds {
 	}
 
 	template<class T>
+	Array<T>::Array(T fromArray[], const uint& arraySize) {
+		resize(arraySize);
+		for (uint i = 0; i < size(); i++)
+			itemList[i] = fromArray[i];
+	}
+
+	template<class T>
 	Array<T>::~Array() {
 		delete[] itemList;
 	}
 
 	template<class T>
-	inline uint Array<T>::size() {
+	inline uint Array<T>::size() const {
 		return listSize;
 	}
 
@@ -60,8 +79,20 @@ namespace ds {
 		for (uint i = 0; i < listSize && i < newSize; i++) {
 			newItemList[i] = itemList[i];
 		}
-		listSize = min(listSize, newSize);
+		listSize = newSize;
 		maxListSize = newSize;
+		delete[] itemList;
+		itemList = newItemList;
+	}
+
+	template<class T>
+	inline void Array<T>::setMaxSize(const uint& newMaxSize) {
+		T *newItemList = new T[newMaxSize];
+		for (uint i = 0; i < listSize && i < newMaxSize; i++) {
+			newItemList[i] = itemList[i];
+		}
+		listSize = min(listSize, newMaxSize);
+		maxListSize = newMaxSize;
 		delete[] itemList;
 		itemList = newItemList;
 	}
@@ -74,7 +105,7 @@ namespace ds {
 	template<class T>
 	inline Array<T>& Array<T>::append(const T& item) {
 		if (listSize == maxListSize) {
-			resize(max(maxListSize * factor, maxListSize + 1));
+			setMaxSize(max(maxListSize * factor, maxListSize + 1));
 		}
 		itemList[listSize++] = item;
 		return *this;
