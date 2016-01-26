@@ -33,6 +33,7 @@ public:
 			Array<int> a(arr1, 4), b(arr2, 4);
 			cerr << (a + b).append(2) << endl;
 			//auto c = a + b;
+
 			//cerr << c.append(2) << endl;
 			//cerr << a + b << endl;
 			/* cerr << b + a << endl;
