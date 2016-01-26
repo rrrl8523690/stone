@@ -12,4 +12,3 @@ int main() {
 	a.run();
 	return 0;
 }
-

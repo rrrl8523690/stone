@@ -8,6 +8,7 @@ namespace ds {
 	class Array {
 	public:
 		Array();
+		Array(const Array<T>& anotherArray);
 		Array(const uint& intialSize);
 		Array(T fromArray[], const uint& arraySize);
 		~Array();
@@ -49,6 +50,15 @@ namespace ds {
 	}
 
 	template<class T>
+	Array<T>::Array(const Array<T>& anotherArray) {
+		itemList = nullptr;
+		listSize = 0;
+		resize(anotherArray.size());
+		for (uint i = 0; i < listSize; i++)
+			itemList[i] = anotherArray[i];
+	}
+
+	template<class T>
 	Array<T>::Array(const uint& initialSize) {
 		maxListSize = initialSize;
 		listSize = 0;
@@ -58,6 +68,8 @@ namespace ds {
 
 	template<class T>
 	Array<T>::Array(T fromArray[], const uint& arraySize) {
+		itemList = nullptr;
+		listSize = 0;
 		resize(arraySize);
 		for (uint i = 0; i < size(); i++)
 			itemList[i] = fromArray[i];
@@ -130,25 +142,29 @@ namespace ds {
 	template<class T>
 	inline Array<T> Array<T>::operator+(const Array<T>& anotherArray) const {
 		Array<T> resultArray;
-		resultArray.resize(listSize + anotherArray.listSize);
-		for (uint i = 0; i < listSize; i++)
+		uint mySize = listSize, anotherSize = anotherArray.size();
+		resultArray.resize(mySize + anotherSize);
+		for (uint i = 0; i < mySize; i++)
 			resultArray[i] = itemList[i];
-		for (uint i = 0; i < anotherArray.listSize; i++)
-			resultArray[i + listSize] = anotherArray[i];
+		for (uint i = 0; i < anotherSize; i++)
+			resultArray[i + mySize] = anotherArray[i];
 		return resultArray;
 	}
 
 	template<class T>
 	inline Array<T>& Array<T>::operator+=(const Array<T>& anotherArray) {
+		uint mySize = listSize, anotherSize = anotherArray.size();
 		resize(listSize + anotherArray.listSize);
-		for (uint i = 0; i < anotherArray.listSize; i++)
-			itemList[i + listSize] = anotherArray[i];
+		for (uint i = 0; i < anotherSize; i++)
+			itemList[i + mySize] = anotherArray[i];
 		return *this;
 	}
 
 	template<class T>
 	inline Array<T>& Array<T>::operator=(const Array<T>& anotherArray) {
 		resize(anotherArray.size());
+		for (uint i = 0; i < anotherArray.size(); i++)
+			itemList[i] = anotherArray[i];
 		return *this;
 	}
 
