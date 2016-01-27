@@ -203,7 +203,7 @@ namespace ds {
 
 	template<class T>
 	inline bool Array<T>::operator!=(const Array<T>& anotherArray) const {
-		return !(>operator==(anotherArray));
+		return !(> operator==(anotherArray));
 	}
 
 	template<class T>
@@ -212,6 +212,7 @@ namespace ds {
 		listSize = 0;
 		maxListSize = 0;
 	}
+
 }
 
 

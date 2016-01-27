@@ -10,7 +10,7 @@ public:
 	static void run() {
 		using namespace ds;
 		using namespace std;
-		cerr << "Array Unit Test" << endl;
+		title("Array Unit Test");
 		{
 			int arr[] = { 1, 2, 3 };
 			Array<int> a(arr, 2);

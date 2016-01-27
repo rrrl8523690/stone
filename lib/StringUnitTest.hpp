@@ -8,7 +8,7 @@ public:
 	static void run() {
 		using namespace std;
 		using namespace ds;
-		cerr << "String Unit Test" << endl;
+		title("String Unit Test");
 		{
 			String<> a = "abcdef";
 			String<> b;
@@ -22,6 +22,8 @@ public:
 			equal((a + String<>("a")).size(), 7);
 			equal(a + "a", String<>("abcdefa"));
 			equal((a += a.subString(0, 2)), String<>("abcdefab"));
+			equal(a == "abcdefab", true);
+			equal(("abcdef" == String<>("abcdef")), true);
 		}
 		{
 			/*int time1 = clock(), time2;

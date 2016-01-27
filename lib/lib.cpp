@@ -6,6 +6,7 @@
 #include "String.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
+#include <Windows.h>
 
 
 void test() {

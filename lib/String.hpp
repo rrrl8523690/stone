@@ -18,6 +18,13 @@ namespace ds {
 		bool operator<=(const String<T>& anotherString) const;
 		bool operator>(const String<T>& anotherString) const;
 		bool operator>=(const String<T>& anotherString) const;
+		friend std::ostream& operator<<(std::ostream& os, const String<T>& str) {
+			os << "\"";
+			for (uint i = 0; i < str.size(); i++)
+				os << str[i];
+			os << "\"";
+			return os;
+		}
 	};
 
 	template<class T>
@@ -118,5 +125,35 @@ namespace ds {
 	template<class T>
 	inline bool String<T>::operator>=(const String<T>& anotherString) const {
 		return !(operator<(anotherString));
+	}
+
+	template<class T>
+	inline bool operator==(const T *literalString, const String<T>& anotherString) {
+		return anotherString == literalString;
+	}
+
+	template<class T>
+	bool operator!=(const T *literalString, const String<T>& anotherString) {
+		return anotherString != literalString;
+	}
+
+	template<class T>
+	bool operator<(const T *literalString, const String<T>& anotherString) {
+		return anotherString > literalString;
+	}
+
+	template<class T>
+	bool operator<=(const T *literalString, const String<T>& anotherString) {
+		return anotherString >= literalString;
+	}
+
+	template<class T>
+	bool operator>(const T *literalString, const String<T>& anotherString) {
+		return anotherString < literalString;
+	}
+
+	template<class T>
+	bool operator>=(const T *literalString, const String<T>& anotherString) {
+		return anotherString <= literalString;
 	}
 }
