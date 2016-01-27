@@ -24,6 +24,12 @@ public:
 			equal((a += a.subString(0, 2)), String<>("abcdefab"));
 			equal(a == "abcdefab", true);
 			equal(("abcdef" == String<>("abcdef")), true);
+			equal(("aa" < String<>("b")), true);
+			equal(("aa" <= String<>("ab")), true);
+			equal("b" > String<>("a"), true);
+			equal("b" >= String<>("a"), true);
+			equal("a" == String<>("a"), true);
+			equal("bad" != String<>("bac"), true);
 		}
 		{
 			/*int time1 = clock(), time2;
