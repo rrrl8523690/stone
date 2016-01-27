@@ -70,6 +70,7 @@ namespace ds {
 	template<class T>
 	Array<T>::Array(const std::initializer_list<T>& literalArray) {
 		initialize();
+		std::cerr << "initializer list called" << std::endl;
 		for (const auto& item : literalArray) {
 			append(item);
 		}
@@ -100,6 +101,10 @@ namespace ds {
 
 	template<class T>
 	inline void Array<T>::resize(const uint& newSize) {
+		if (newSize <= maxListSize) {
+			listSize = newSize;
+			return;
+		}
 		T *newItemList = new T[newSize];
 		for (uint i = 0; i < listSize && i < newSize; i++) {
 			newItemList[i] = itemList[i];
@@ -112,6 +117,8 @@ namespace ds {
 
 	template<class T>
 	inline void Array<T>::setMaxSize(const uint& newMaxSize) {
+		if (maxListSize == newMaxSize)
+			return;
 		T *newItemList = new T[newMaxSize];
 		for (uint i = 0; i < listSize && i < newMaxSize; i++) {
 			newItemList[i] = itemList[i];
@@ -167,7 +174,10 @@ namespace ds {
 	template<class T>
 	inline Array<T>& Array<T>::operator+=(const Array<T>& anotherArray) {
 		uint mySize = listSize, anotherSize = anotherArray.size();
-		resize(listSize + anotherArray.listSize);
+		uint newListSize = listSize + anotherSize;
+		if (maxListSize < newListSize)
+			setMaxSize(max(newListSize, maxListSize * factor));
+		listSize = newListSize;
 		for (uint i = 0; i < anotherSize; i++)
 			itemList[i + mySize] = anotherArray[i];
 		return *this;

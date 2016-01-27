@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <ctime>
 
 #define equal(t1,t2)  \
 {if(!((t1)==(t2)))std::cerr << "ERROR: " << (#t1) << " != " << (#t2) << std::endl\

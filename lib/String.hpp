@@ -6,13 +6,21 @@ namespace ds {
 	template<class T = char>
 	class String : public Array<T> {
 	public:
+		String();
 		String(const T *string);
 		String<T> subString(const uint& l, const uint& r) const;
+		String<T>& operator=(const String<T>& anotherString);
+		String<T> operator+(const String<T>& anotherString) const;
+		String<T>& operator+=(const String<T>& anotherString);
 		bool operator<(const String<T>& anotherString) const;
 		bool operator<=(const String<T>& anotherString) const;
 		bool operator>(const String<T>& anotherString) const;
 		bool operator>=(const String<T>& anotherString) const;
 	};
+
+	template<class T>
+	String<T>::String() {
+	}
 
 	template<class T>
 	String<T>::String(const T *string) {
@@ -30,6 +38,39 @@ namespace ds {
 			resultString.append(itemList[i]);
 		}
 		return resultString;
+	}
+
+	template<class T>
+	String<T>& String<T>::operator=(const String<T>& anotherString) {
+		resize(anotherString.size());
+
+		return *this;
+	}
+
+	template<class T>
+	String<T> String<T>::operator+(const String<T>& anotherString) const {
+		String<T> result;
+		uint mySize = size(), anotherSize = anotherString.size();
+		result.resize(mySize + anotherSize);
+		for (uint i = 0; i < mySize; i++) {
+			result[i] = itemList[i];
+		}
+		for (uint i = 0; i < anotherSize; i++) {
+			result[i + mySize] = anotherString[i];
+		}
+		return result;
+	}
+
+	template<class T>
+	String<T>& String<T>::operator+=(const String<T>& anotherString) {
+		uint mySize = listSize, anotherSize = anotherString.size();
+		uint newListSize = listSize + anotherSize;
+		if (maxListSize < newListSize)
+			setMaxSize(max(newListSize, maxListSize * factor));
+		listSize = newListSize;
+		for (uint i = 0; i < anotherSize; i++)
+			itemList[i + mySize] = anotherString[i];
+		return *this;
 	}
 
 	template<class T>

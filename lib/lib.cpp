@@ -5,10 +5,15 @@
 #include "Array.hpp"
 #include "String.hpp"
 #include "ArrayUnitTest.hpp"
+#include "StringUnitTest.hpp"
 
 
+void test() {
+	ArrayUnitTest::run();
+	StringUnitTest::run();
+
+}
 int main() {
-	ArrayUnitTest a;
-	a.run();
+	test();
 	return 0;
 }

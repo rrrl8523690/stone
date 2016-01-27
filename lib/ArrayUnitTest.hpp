@@ -7,7 +7,7 @@
 
 class ArrayUnitTest {
 public:
-	void run() {
+	static void run() {
 		using namespace ds;
 		using namespace std;
 		cerr << "Array Unit Test" << endl;
@@ -50,6 +50,7 @@ public:
 			cerr << a << endl;
 			a += a;
 			cerr << a << endl;
+			cerr << (a = { 1, 2, 3 }) << endl;
 
 			//done
 		}
