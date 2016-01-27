@@ -45,6 +45,9 @@
     <ClInclude Include="UnitTest.hpp">
       <Filter>头文件\ds</Filter>
     </ClInclude>
+    <ClInclude Include="StringUnitTest.hpp">
+      <Filter>头文件\ds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

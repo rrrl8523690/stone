@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <initializer_list>
 
 namespace ds {
 	template<class T>
@@ -10,9 +11,11 @@ namespace ds {
 		Array();
 		Array(const Array<T>& anotherArray);
 		Array(const uint& intialSize);
-		Array(T fromArray[], const uint& arraySize);
+		Array(const std::initializer_list<T>& literalArray);
+		Array(const T fromArray[], const uint& arraySize);
 		~Array();
 		uint size() const;
+		bool empty() const;
 		void resize(const uint& newSize);
 		void setMaxSize(const uint& newMaxSize);
 		T& at(const uint& index);
@@ -40,19 +43,18 @@ namespace ds {
 		static const uint factor = 2;
 		T *itemList;
 		uint maxListSize, listSize;
+	private:
+		void initialize();
 	};
 
 	template<class T>
 	Array<T>::Array() {
-		maxListSize = 0;
-		listSize = 0;
-		itemList = nullptr;
+		initialize();
 	}
 
 	template<class T>
 	Array<T>::Array(const Array<T>& anotherArray) {
-		itemList = nullptr;
-		listSize = 0;
+		initialize();
 		resize(anotherArray.size());
 		for (uint i = 0; i < listSize; i++)
 			itemList[i] = anotherArray[i];
@@ -60,16 +62,22 @@ namespace ds {
 
 	template<class T>
 	Array<T>::Array(const uint& initialSize) {
+		initialize();
 		maxListSize = initialSize;
-		listSize = 0;
-		itemList = nullptr;
 		resize(maxListSize);
 	}
 
 	template<class T>
-	Array<T>::Array(T fromArray[], const uint& arraySize) {
-		itemList = nullptr;
-		listSize = 0;
+	Array<T>::Array(const std::initializer_list<T>& literalArray) {
+		initialize();
+		for (const auto& item : literalArray) {
+			append(item);
+		}
+	}
+
+	template<class T>
+	Array<T>::Array(const T fromArray[], const uint& arraySize) {
+		initialize();
 		resize(arraySize);
 		for (uint i = 0; i < size(); i++)
 			itemList[i] = fromArray[i];
@@ -83,6 +91,11 @@ namespace ds {
 	template<class T>
 	inline uint Array<T>::size() const {
 		return listSize;
+	}
+
+	template<class T>
+	inline bool Array<T>::empty() const {
+		return !listSize;
 	}
 
 	template<class T>
@@ -182,6 +195,13 @@ namespace ds {
 	template<class T>
 	inline bool Array<T>::operator!=(const Array<T>& anotherArray) const {
 		return !(this->operator==(anotherArray));
+	}
+
+	template<class T>
+	inline void Array<T>::initialize() {
+		itemList = nullptr;
+		listSize = 0;
+		maxListSize = 0;
 	}
 }
 

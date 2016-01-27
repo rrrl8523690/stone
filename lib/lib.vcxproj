@@ -151,6 +151,7 @@
     <ClInclude Include="RegExpParser.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="String.hpp" />
+    <ClInclude Include="StringUnitTest.hpp" />
     <ClInclude Include="UnitTest.hpp" />
   </ItemGroup>
   <ItemGroup>
