@@ -12,6 +12,8 @@ namespace ds {
 		String<T>& operator=(const String<T>& anotherString);
 		String<T> operator+(const String<T>& anotherString) const;
 		String<T>& operator+=(const String<T>& anotherString);
+		bool operator==(const String<T>& anotherString) const;
+		bool operator!=(const String<T>& anotherString) const;
 		bool operator<(const String<T>& anotherString) const;
 		bool operator<=(const String<T>& anotherString) const;
 		bool operator>(const String<T>& anotherString) const;
@@ -32,7 +34,7 @@ namespace ds {
 	}
 
 	template<class T>
-	String<T> String<T>::subString(const uint& l, const uint& r) const {
+	inline String<T> String<T>::subString(const uint& l, const uint& r) const {
 		String<T> resultString;
 		for (uint i = l; i < r; i++) {
 			resultString.append(itemList[i]);
@@ -41,14 +43,16 @@ namespace ds {
 	}
 
 	template<class T>
-	String<T>& String<T>::operator=(const String<T>& anotherString) {
+	inline String<T>& String<T>::operator=(const String<T>& anotherString) {
 		resize(anotherString.size());
-
+		for (uint i = 0; i < anotherString.size(); i++) {
+			itemList[i] = anotherString[i];
+		}
 		return *this;
 	}
 
 	template<class T>
-	String<T> String<T>::operator+(const String<T>& anotherString) const {
+	inline String<T> String<T>::operator+(const String<T>& anotherString) const {
 		String<T> result;
 		uint mySize = size(), anotherSize = anotherString.size();
 		result.resize(mySize + anotherSize);
@@ -62,7 +66,7 @@ namespace ds {
 	}
 
 	template<class T>
-	String<T>& String<T>::operator+=(const String<T>& anotherString) {
+	inline String<T>& String<T>::operator+=(const String<T>& anotherString) {
 		uint mySize = listSize, anotherSize = anotherString.size();
 		uint newListSize = listSize + anotherSize;
 		if (maxListSize < newListSize)
@@ -74,16 +78,22 @@ namespace ds {
 	}
 
 	template<class T>
-	bool String<T>::operator<(const String<T>& anotherString) const {
-		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
+	inline bool String<T>::operator==(const String<T>& anotherString) const {
+		if (size() != anotherString.size())
+			return false;
+		for (uint i = 0; i < size(); i++)
 			if (itemList[i] != anotherString[i])
-				return itemList[i] < anotherString[i];
-		}
-		return size() < anotherString.size();
+				return false;
+		return true;
 	}
 
 	template<class T>
-	bool String<T>::operator<=(const String<T>& anotherString) const {
+	inline bool String<T>::operator!=(const String<T>& anotherString) const {
+		return !(operator==(anotherString));
+	}
+
+	template<class T>
+	inline bool String<T>::operator<=(const String<T>& anotherString) const {
 		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
 			if (itemList[i] != anotherString[i])
 				return itemList[i] < anotherString[i];
@@ -92,20 +102,21 @@ namespace ds {
 	}
 
 	template<class T>
-	bool String<T>::operator>(const String<T>& anotherString) const {
-		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
-			if (itemList[i] != anotherString[i])
-				return itemList[i] > anotherString[i];
-		}
-		return size() > anotherString.size();
+	inline bool String<T>::operator>(const String<T>& anotherString) const {
+		return !(operator<=(anotherString));
 	}
 
 	template<class T>
-	bool String<T>::operator>=(const String<T>& anotherString) const {
+	inline bool String<T>::operator<(const String<T>& anotherString) const {
 		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
 			if (itemList[i] != anotherString[i])
-				return itemList[i] > anotherString[i];
+				return itemList[i] < anotherString[i];
 		}
-		return size() >= anotherString.size();
+		return size() < anotherString.size();
+	}
+
+	template<class T>
+	inline bool String<T>::operator>=(const String<T>& anotherString) const {
+		return !(operator<(anotherString));
 	}
 }

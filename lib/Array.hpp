@@ -70,7 +70,6 @@ namespace ds {
 	template<class T>
 	Array<T>::Array(const std::initializer_list<T>& literalArray) {
 		initialize();
-		std::cerr << "initializer list called" << std::endl;
 		for (const auto& item : literalArray) {
 			append(item);
 		}
@@ -204,7 +203,7 @@ namespace ds {
 
 	template<class T>
 	inline bool Array<T>::operator!=(const Array<T>& anotherArray) const {
-		return !(this->operator==(anotherArray));
+		return !(>operator==(anotherArray));
 	}
 
 	template<class T>
