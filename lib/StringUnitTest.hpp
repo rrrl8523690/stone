@@ -32,6 +32,13 @@ public:
 			equal("bad" != String<>("bac"), true);
 		}
 		{
+			equal(String<>("abc") + 'd', "abcd");
+			equal('d' + String<>("abc"), "dabc");
+			String<>a = "asdfs";
+			equal('g' + a + 'b' + 'c', "gasdfsbc");
+			equal('g' + a + 'b' + 'c', "gasdfsbc");
+		}
+		{
 			/*int time1 = clock(), time2;
 			String<> tmp;
 			String<> constant = "a";

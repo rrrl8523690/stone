@@ -6,6 +6,8 @@
 #include "String.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
+#include "RegExpReader.hpp"
+#include "RegExpParser.hpp"
 #include <Windows.h>
 
 
@@ -16,5 +18,7 @@ void test() {
 }
 int main() {
 	test();
+	re::RegExpParser<char> parser("asdf");
+	//re::RegExpReader<char> reader("fas");
 	return 0;
 }

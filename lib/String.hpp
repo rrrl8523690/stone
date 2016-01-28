@@ -8,8 +8,10 @@ namespace ds {
 	public:
 		String();
 		String(const T *string);
+		String<T>& append(const T& character);
 		String<T> subString(const uint& l, const uint& r) const;
 		String<T>& operator=(const String<T>& anotherString);
+		String<T> operator+(const T& character) const;
 		String<T> operator+(const String<T>& anotherString) const;
 		String<T>& operator+=(const String<T>& anotherString);
 		bool operator==(const String<T>& anotherString) const;
@@ -19,10 +21,8 @@ namespace ds {
 		bool operator>(const String<T>& anotherString) const;
 		bool operator>=(const String<T>& anotherString) const;
 		friend std::ostream& operator<<(std::ostream& os, const String<T>& str) {
-			os << "\"";
 			for (uint i = 0; i < str.size(); i++)
 				os << str[i];
-			os << "\"";
 			return os;
 		}
 	};
@@ -48,6 +48,12 @@ namespace ds {
 		}
 		return resultString;
 	}
+	
+	template<class T>
+	inline String<T>& String<T>::append(const T& character) {
+		Array<T>::append(character);
+		return *this;
+	}
 
 	template<class T>
 	inline String<T>& String<T>::operator=(const String<T>& anotherString) {
@@ -56,6 +62,21 @@ namespace ds {
 			itemList[i] = anotherString[i];
 		}
 		return *this;
+	}
+
+	template<class T>
+	inline String<T> String<T>::operator+(const T& character) const {
+		String result = *this;
+		result.append(character);
+		return result;
+	}
+	
+	template<class T>
+	inline String<T> operator+(const T& character, const String<T>& str) {
+		String<T> result;
+		result.resize(1);
+		result[0] = character;
+		return result += str;
 	}
 
 	template<class T>

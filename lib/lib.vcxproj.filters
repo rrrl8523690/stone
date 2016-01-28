@@ -19,6 +19,9 @@
     <Filter Include="头文件\re">
       <UniqueIdentifier>{93156fc3-3d2b-4f54-a759-44960ed47876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\NewFilter1">
+      <UniqueIdentifier>{5af0e91d-aa06-4a0b-82ce-b1aa2b99c4b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -47,6 +50,12 @@
     </ClInclude>
     <ClInclude Include="StringUnitTest.hpp">
       <Filter>头文件\ds</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RegExpReader.hpp">
+      <Filter>头文件\re</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

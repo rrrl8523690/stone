@@ -2,26 +2,25 @@
 
 #include <iostream>
 #include <ctime>
+#include "stdafx.h"
 #include <Windows.h>
 
-inline void setConsoleColor(int colorId) {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorId);
-}
+
 inline void title(const char *message) {
-	setConsoleColor(13);
+	setConsoleColor(TITLE);
 	std::cerr << message << std::endl;
-	setConsoleColor(7);
+	setConsoleColor(DEFAULT);
 }
 #define equal(t1,t2)  \
 {\
 if (!((t1) == (t2))) {\
-	setConsoleColor(207);\
+	setConsoleColor(WRONG);\
 	std::cerr << "ERROR: " << (#t1) << " != " << (#t2) << std::endl\
 		<< (#t1) << " = " << (t1) << ", " << (#t2) << " = " << (t2) << std::endl;\
 }\
 else {\
-setConsoleColor(2);\
+setConsoleColor(CORRECT);\
 cerr << (#t1) << " == " << (#t2) << std::endl;\
 }\
-setConsoleColor(7);\
+setConsoleColor(DEFAULT);\
 }
