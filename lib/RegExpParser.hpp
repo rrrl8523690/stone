@@ -11,7 +11,7 @@ namespace re {
 	template<class CharType> class TermNode;
 	template<class CharType> class FactorNode;
 	template<class CharType> class BaseNode;
-	template<class CharType> class CharSetNode
+	template<class CharType> class CharSetNode;
 	template<class CharType> class BracketsNode;
 
 	template<class CharType = char>
@@ -86,12 +86,13 @@ namespace re {
 		bool hasError;
 	};
 
-
-
-
+	template<class CharType>
+	class Node {
+	public:
+	};
 
 	template<class CharType>
-	class RENode {
+	class RENode : virtual public Node<CharType> {
 	public:
 		RENode() {
 			termArray = new Array<TermNode<CharType> *>();
@@ -105,7 +106,7 @@ namespace re {
 	};
 
 	template<class CharType>
-	class TermNode {
+	class TermNode : virtual public Node<CharType> {
 	public:
 		TermNode() {
 			factorArray = new Array<FactorNode<CharType> *>();
@@ -121,7 +122,7 @@ namespace re {
 	};
 
 	template<class CharType>
-	class FactorNode {
+	class FactorNode : virtual public Node<CharType> {
 	public:
 		FactorNode() {
 			unaryOperatorArray = new Array<CharType>();
@@ -136,17 +137,15 @@ namespace re {
 		Array<CharType> *unaryOperatorArray;
 	};
 
-	template<class
-
-		template<class CharType>
-	class BaseNode {
+	template<class CharType>
+	class BaseNode : virtual public Node<CharType> {
 	public:
 
 	};
 
 	template<class CharType>
 	class CharSetNode : public BaseNode<CharType> {
-
+		
 	};
 
 	template<class CharType>
