@@ -8,9 +8,12 @@ namespace ds {
 	public:
 		String();
 		String(const T *string);
+		String(const String<T>& anotherString);
+		String(String<T>&& anotherString);
 		String<T>& append(const T& character);
 		String<T> subString(const uint& l, const uint& r) const;
 		String<T>& operator=(const String<T>& anotherString);
+		String<T>& operator=(String<T>&& anotherString);
 		String<T> operator+(const T& character) const;
 		String<T> operator+(const String<T>& anotherString) const;
 		String<T>& operator+=(const String<T>& anotherString);
@@ -25,10 +28,23 @@ namespace ds {
 				os << str[i];
 			return os;
 		}
+	private:
+		inline void helpMove(String<T>&& anotherString) {
+			if (this != &anotherString) {
+				delete[] itemList;
+				itemList = anotherString.itemList;
+				listSize = anotherString.listSize;
+				maxListSize = anotherString.maxListSize;
+				anotherString.itemList = nullptr;
+				anotherString.listSize = 0;
+				anotherString.maxListSize = 0;
+			}
+		}
 	};
 
 	template<class T>
 	String<T>::String() {
+		initialize();
 	}
 
 	template<class T>
@@ -41,6 +57,19 @@ namespace ds {
 	}
 
 	template<class T>
+	String<T>::String(const String<T>& anotherString) {
+		resize(anotherString.size());
+		for (uint i = 0; i < anotherString.size(); i++)
+			itemList[i] = anotherString[i];
+	}
+
+	template<class T>
+	String<T>::String(String<T>&& anotherString) {
+		initialize();
+		helpMove(std::move(anotherString));
+	}
+
+	template<class T>
 	inline String<T> String<T>::subString(const uint& l, const uint& r) const {
 		String<T> resultString;
 		for (uint i = l; i < r; i++) {
@@ -48,7 +77,7 @@ namespace ds {
 		}
 		return resultString;
 	}
-	
+
 	template<class T>
 	inline String<T>& String<T>::append(const T& character) {
 		Array<T>::append(character);
@@ -65,12 +94,18 @@ namespace ds {
 	}
 
 	template<class T>
+	inline String<T>& String<T>::operator=(String<T>&& anotherString) {
+		helpMove(std::move(anotherString));
+		return *this;
+	}
+
+	template<class T>
 	inline String<T> String<T>::operator+(const T& character) const {
 		String result = *this;
 		result.append(character);
 		return result;
 	}
-	
+
 	template<class T>
 	inline String<T> operator+(const T& character, const String<T>& str) {
 		String<T> result;

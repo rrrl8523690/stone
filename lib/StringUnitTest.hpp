@@ -37,6 +37,9 @@ public:
 			String<>a = "asdfs";
 			equal('g' + a + 'b' + 'c', "gasdfsbc");
 			equal('g' + a + 'b' + 'c', "gasdfsbc");
+			String<>t(String<>("asdf"));
+			equal(t, "asdf");
+			equal(t.append('a'), "asdfa");
 		}
 		{
 			/*int time1 = clock(), time2;

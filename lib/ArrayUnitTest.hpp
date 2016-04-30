@@ -44,6 +44,7 @@ public:
 			auto c = a + b;
 
 			cerr << c.append(2) << endl;
+			// error!
 			cerr << a + b << endl;
 			cerr << b + a << endl;
 			a += b;

@@ -148,12 +148,15 @@
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayUnitTest.hpp" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Lexer.hpp" />
+    <ClInclude Include="Reader.hpp" />
     <ClInclude Include="RegExp.hpp" />
     <ClInclude Include="RegExpParser.hpp" />
     <ClInclude Include="RegExpReader.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="String.hpp" />
     <ClInclude Include="StringUnitTest.hpp" />
+    <ClInclude Include="Token.hpp" />
     <ClInclude Include="UnitTest.hpp" />
   </ItemGroup>
   <ItemGroup>

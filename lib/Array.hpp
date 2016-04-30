@@ -10,6 +10,7 @@ namespace ds {
 	public:
 		Array();
 		Array(const Array<T>& anotherArray);
+		Array(Array<T>&& anotherArray);
 		Array(const uint& intialSize);
 		Array(const std::initializer_list<T>& literalArray);
 		Array(const T fromArray[], const uint& arraySize);
@@ -36,6 +37,7 @@ namespace ds {
 		Array<T> operator+(const Array<T>& anotherArray) const;
 		Array<T>& operator+=(const Array<T>& anotherArray);
 		Array<T>& operator=(const Array<T>& anotherArray);
+		Array<T>& operator=(Array<T>&& anotherArray);
 		bool operator==(const Array<T>& anotherArray) const;
 		bool operator!=(const Array<T>& anotherArray) const;
 
@@ -43,8 +45,19 @@ namespace ds {
 		static const uint factor = 2;
 		T *itemList;
 		uint maxListSize, listSize;
+		inline void initialize();
 	private:
-		void initialize();
+		inline void helpMove(Array<T>&& anotherArray) {
+			if (this != &anotherArray) {
+				delete[] itemList;
+				itemList = anotherArray.itemList;
+				listSize = anotherArray.listSize;
+				maxListSize = anotherArray.maxListSize;
+				anotherArray.listSize = 0;
+				anotherArray.maxListSize = 0;
+				anotherArray.itemList = nullptr;
+			}
+		}
 	};
 
 	template<class T>
@@ -58,6 +71,12 @@ namespace ds {
 		resize(anotherArray.size());
 		for (uint i = 0; i < listSize; i++)
 			itemList[i] = anotherArray[i];
+	}
+
+	template<class T>
+	Array<T>::Array(Array<T>&& anotherArray) {
+		initialize();
+		helpMove(std::move(anotherArray));
 	}
 
 	template<class T>
@@ -187,6 +206,12 @@ namespace ds {
 		resize(anotherArray.size());
 		for (uint i = 0; i < anotherArray.size(); i++)
 			itemList[i] = anotherArray[i];
+		return *this;
+	}
+
+	template<class T>
+	inline Array<T>& Array<T>::operator=(Array<T>&& anotherArray) {
+		helpMove(std::move(anotherArray));
 		return *this;
 	}
 

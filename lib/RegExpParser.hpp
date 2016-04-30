@@ -53,7 +53,7 @@ namespace re {
 			return termNode;
 		}
 
-		inline static bool isUnaryOperator(const CharType& character) const {
+		inline static bool isUnaryOperator(const CharType& character) {
 			return character == '*' || character == '?' || character == '+';
 		}
 
@@ -145,7 +145,7 @@ namespace re {
 
 	template<class CharType>
 	class CharSetNode : public BaseNode<CharType> {
-		
+
 	};
 
 	template<class CharType>

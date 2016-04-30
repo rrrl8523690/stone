@@ -19,7 +19,7 @@
     <Filter Include="头文件\re">
       <UniqueIdentifier>{93156fc3-3d2b-4f54-a759-44960ed47876}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\NewFilter1">
+    <Filter Include="头文件\stone">
       <UniqueIdentifier>{5af0e91d-aa06-4a0b-82ce-b1aa2b99c4b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -56,6 +56,15 @@
     </ClInclude>
     <ClInclude Include="RegExpReader.hpp">
       <Filter>头文件\re</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader.hpp">
+      <Filter>头文件\stone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
