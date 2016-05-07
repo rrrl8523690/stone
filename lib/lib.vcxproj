@@ -148,6 +148,7 @@
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayUnitTest.hpp" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Iterator.hpp" />
     <ClInclude Include="Lexer.hpp" />
     <ClInclude Include="Reader.hpp" />
     <ClInclude Include="RegExp.hpp" />

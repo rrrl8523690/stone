@@ -212,4 +212,5 @@ namespace ds {
 	bool operator>=(const T *literalString, const String<T>& anotherString) {
 		return anotherString <= literalString;
 	}
+
 }

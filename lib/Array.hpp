@@ -1,10 +1,12 @@
 #pragma once
 
 #include "stdafx.h"
+#include "Iterator.hpp"
 #include <iostream>
 #include <initializer_list>
 
 namespace ds {
+	template<class T> class ArrayIterator;
 	template<class T>
 	class Array {
 	public:
@@ -23,12 +25,20 @@ namespace ds {
 		Array<T>& append(const T& item);
 		Array<T>& clear();
 
-		friend std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
+
+
+		friend std::ostream& operator<<(std::ostream& os, Array<T>& arr) {
 			os << "{";
 			for (uint i = 0; i < arr.size(); i++) {
 				if (i) os << ", ";
 				os << arr[i];
 			}
+			//ArrayIterator<T> it(&arr);
+			//for (; it.hasNext(); it++) {
+			//	os << it.get();
+			//	if (it.hasNext())
+			//		os << ", ";
+			//}
 			os << "}";
 			return os;
 		}
@@ -239,5 +249,4 @@ namespace ds {
 	}
 
 }
-
 

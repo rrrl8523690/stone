@@ -19,6 +19,6 @@ void test() {
 int main() {
 	test();
 	re::RegExpParser<char> parser("asdf");
-	//re::RegExpReader<char> reader("fas");
+	//re::RegExpReader<char> m_reader("fas");
 	return 0;
 }
