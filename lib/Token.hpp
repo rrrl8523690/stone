@@ -13,11 +13,15 @@ namespace stone {
 	};
 	class Token {
 	public:
-		Token(const String<char_type> &string) {
+		Token(const String<char_type> &string, uint lineNumber) {
 			m_string = string;
+			m_lineNumber = lineNumber;
 		}
-		virtual const String<char_type> &string() {
+		virtual const String<char_type> &string() const {
 			return m_string;
+		}
+		virtual uint lineNumber() const {
+			return m_lineNumber;
 		}
 		virtual TokenType type() = 0;
 		virtual ~Token() {
@@ -25,11 +29,12 @@ namespace stone {
 		}
 	private:
 		String<char_type> m_string;
+		uint m_lineNumber;
 	};
 
 	class IdToken : public Token {
 	public:
-		IdToken(const String<char_type> &string) : Token(string) {
+		IdToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
 
 		}
 		TokenType type() {
@@ -39,7 +44,7 @@ namespace stone {
 
 	class NumToken : public Token {
 	public:
-		NumToken(const String<char_type> &string) : Token(string) {
+		NumToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
 
 		}
 		TokenType type() {
@@ -49,7 +54,7 @@ namespace stone {
 
 	class SymToken : public Token {
 	public:
-		SymToken(const String<char_type> &string) : Token(string) {
+		SymToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
 			
 		}
 		TokenType type() {
@@ -59,7 +64,7 @@ namespace stone {
 
 	class ErrToken : public Token {
 	public:
-		ErrToken(const String<char_type> &string) : Token(string) {
+		ErrToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
 		}
 		TokenType type() {
 			return ERR;

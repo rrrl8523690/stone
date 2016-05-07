@@ -9,13 +9,22 @@ namespace stone {
 	typedef char char_type;
 	class Lexer {
 	public:
-		Lexer(const String<char_type> *string) {
+		Lexer(String<char_type> *string) {
 			m_reader = new StringReader<char_type>(string);
-			head = 0;
+			m_head = 0;
+			m_lineNumber = 1;
 		}
 
 		Token *read() {
+			if (!fillTokens(1))
+				return nullptr;
+			return m_tokens[m_head++];
+		}
 
+		Token *peek(int step) {
+			if (!fillTokens(step))
+				return nullptr;
+			return m_tokens[m_head + step];
 		}
 
 		~Lexer() {
@@ -66,7 +75,7 @@ namespace stone {
 						break;
 					reader->next();
 				}
-				m_tokens.append(new IdToken(string));
+				m_tokens.append(new IdToken(string, m_lineNumber));
 				return true;
 			} else if (isNum(ch)) { // NumToken
 				int visDot = 0;
@@ -79,9 +88,9 @@ namespace stone {
 					reader->next();
 				}
 				if (visDot <= 1)
-					m_tokens.append(new NumToken(string));
+					m_tokens.append(new NumToken(string, m_lineNumber));
 				else
-					m_tokens.append(new ErrToken(string));
+					m_tokens.append(new ErrToken(string, m_lineNumber));
 			} else if (isSymbol(ch)) { // SymToken
 				string.append(ch);
 				reader->next();
@@ -91,27 +100,30 @@ namespace stone {
 					string.append(ch2);
 					reader->next();
 				}
-				m_tokens.append(new SymToken(string));
+				m_tokens.append(new SymToken(string, m_lineNumber));
 			} else { //ErrToken
-				m_tokens.append(new ErrToken(string));
+				m_tokens.append(new ErrToken(string, m_lineNumber));
 				reader->next();
 			}
 			return true;
 		}
 		bool fillTokens(uint atLeast = 1) {
-			if (m_tokens.size() - head >= atLeast)
+			if (m_tokens.size() - m_head >= atLeast)
 				return true;
-			while (!m_reader->isEnd() && m_tokens.size() - head < atLeast) {
+			while (!m_reader->isEnd() && m_tokens.size() - m_head < atLeast) {
 				String<char_type> line = m_reader->readLine();
 				Reader<char_type> *lineReader = new StringReader<char_type>(&line);
 				while (!lineReader->isEnd()) {
 					fillAToken(lineReader); 
 				}
+				m_lineNumber++;
 			}
+			return m_tokens.size() - m_head >= atLeast;
 		}
 
 		Reader<char_type> *m_reader;
 		Array<Token*> m_tokens;
-		uint head;
+		uint m_head;
+		uint m_lineNumber;
 	};
 }

@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayUnitTest.hpp" />
+    <ClInclude Include="AST.hpp" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Iterator.hpp" />
     <ClInclude Include="Lexer.hpp" />

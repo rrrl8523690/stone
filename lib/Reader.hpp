@@ -29,7 +29,7 @@ namespace stone {
 	class StringReader : public Reader<CharType> {
 	public:
 		StringReader() = delete;
-		StringReader(const String<CharType> *string_) {
+		StringReader(String<CharType> *string_) {
 			string = string_;
 			pos = 0;
 		}

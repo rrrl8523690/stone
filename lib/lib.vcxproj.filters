@@ -69,6 +69,9 @@
     <ClInclude Include="Iterator.hpp">
       <Filter>头文件\ds</Filter>
     </ClInclude>
+    <ClInclude Include="AST.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
