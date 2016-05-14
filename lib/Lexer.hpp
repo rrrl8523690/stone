@@ -9,7 +9,7 @@ namespace stone {
 	typedef char char_type;
 	class Lexer {
 	public:
-		Lexer(String<char_type> *string) {
+		Lexer(String<char_type> *string) {// TODO: change it to Reader
 			m_reader = new StringReader<char_type>(string);
 			m_head = 0;
 			m_lineNumber = 1;
@@ -19,6 +19,10 @@ namespace stone {
 			if (!fillTokens(1))
 				return nullptr;
 			return m_tokens[m_head++];
+		}
+
+		bool isEnd() {
+			return !fillTokens(1);
 		}
 
 		Token *peek(int step) {
@@ -41,8 +45,12 @@ namespace stone {
 			static char_type blankCharSet[] = " \t";
 			return isInCharSet(ch, blankCharSet);
 		}
+		bool isOp(char_type ch) {
+			static char_type opBeginCharSet[] = "|&^!+-*/=<>";
+			return isInCharSet(ch, opBeginCharSet);
+		}
 		bool isSymbol(char_type ch) {
-			static char_type symbolBeginCharSet[] = ";,.|&^!+-*/=<>[](){}";
+			static char_type symbolBeginCharSet[] = ";,.[](){}";
 			return isInCharSet(ch, symbolBeginCharSet);
 		}
 		bool couldBeLonger(char_type ch) {
@@ -91,7 +99,7 @@ namespace stone {
 					m_tokens.append(new NumToken(string, m_lineNumber));
 				else
 					m_tokens.append(new ErrToken(string, m_lineNumber));
-			} else if (isSymbol(ch)) { // SymToken
+			} else if (isOp(ch)) { // OpToken
 				string.append(ch);
 				reader->next();
 				char_type ch2 = reader->read(); // does not support << and >> currently
@@ -100,7 +108,11 @@ namespace stone {
 					string.append(ch2);
 					reader->next();
 				}
+				m_tokens.append(new OpToken(string, m_lineNumber));
+			} else if (isSymbol(ch)) {
+				string.append(ch);
 				m_tokens.append(new SymToken(string, m_lineNumber));
+				reader->next();
 			} else { //ErrToken
 				m_tokens.append(new ErrToken(string, m_lineNumber));
 				reader->next();
@@ -114,7 +126,7 @@ namespace stone {
 				String<char_type> line = m_reader->readLine();
 				Reader<char_type> *lineReader = new StringReader<char_type>(&line);
 				while (!lineReader->isEnd()) {
-					fillAToken(lineReader); 
+					fillAToken(lineReader);
 				}
 				m_lineNumber++;
 			}
