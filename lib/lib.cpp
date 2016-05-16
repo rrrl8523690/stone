@@ -4,21 +4,22 @@
 #include "stdafx.h"
 #include <iostream>
 #include <fstream>
+#include <Windows.h>
 #include "Array.hpp"
 #include "String.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
 #include "Lexer.hpp"
+#include "Parser.hpp"
+#include "Visitor.hpp"
 
-#include <Windows.h>
 
-
-void test() {
+void dsUnitTest() {
 	ArrayUnitTest::run();
 	StringUnitTest::run();
 
 }
-int main() {
+void stoneTest() {
 	using namespace stone;
 	using namespace ds;
 	std::fstream inputFileStream("test.stone", std::ios::in);
@@ -39,10 +40,21 @@ int main() {
 		std::cerr << "(" << descriptor[token->type()] << ", " << token->string() << ")" << " ";
 		if (token->type() == Token::OP) {
 			if (((OpToken*)token)->getOperator(2))
-				std::cerr << ((OpToken*)token)->getOperator(2)->opType() << std::endl;
+				std::cerr << ((OpToken*)token)->getOperator(2)->type() << std::endl;
 		}
 		lastLineNumber = token->lineNumber();
 	}
+}
+
+void visitorTest() {
+	using namespace test;
+	Node *node = new Node1();
+	Visitor *visitor = new Visitor1();
+	node->accept(visitor);
+}
+int main() {
+	visitorTest();
+	//stoneTest();
 	//test();
 	//re::RegExpParser<char> parser("asdf");
 	//re::RegExpReader<char> m_reader("fas");

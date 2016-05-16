@@ -82,7 +82,7 @@ namespace stone {
 		uint operandNum() const {
 			return m_operandNum;
 		}
-		OpType opType() const {
+		OpType type() const {
 			return m_opType;
 		}
 	private:

@@ -5,47 +5,31 @@
 
 namespace stone {
 	typedef typename char char_type;
+	class ASTVisitor;
 	class AST {
 	public:
+		virtual void accept(ASTVisitor *visitor) {
+			//visitor->visit(this);
+		}
 	};
-	class Expr : public AST {
+	class ExprAST : public virtual AST {
 
 	};
-	class BinaryOp : public Expr {
+	class BinaryOpAST : public virtual ExprAST {
 	public:
-		enum OpType {
-			ADD, SUB,
-			MUL, DIV,
-			AND, OR,
-			ANDALSO,
-			ORELSE,
-			ERR,
-			POSITVE, NEGATIVE,
-		};
-		static OpType getOpType(const String<char_type> &opString, const uint operandNum) {
-			static String<char_type> binOps[] = { "+" , "-" , "*", "/", "&", "/", "&&", "||" };
-			uint size = ERR;
-			uint i;
-			for (i = 0; i < size; i++) {
-				if (binOps[i] == opString)
-					break;
-			}
-			if (operandNum == 1) {
-				if (opString == "+")
-					return POSITVE;
-				if (opString == "-")
-					return NEGATIVE;
-			}
-			return OpType(i);
+		BinaryOpAST(ExprAST *left_, Operator *op_, ExprAST *right_) {
+			m_left = left_;
+			m_op = op_;
+			m_right = right_;
 		}
 	private:
-		OpType m_op;
-		Expr *m_left, *m_right;
+		Operator *m_op;
+		ExprAST *m_left, *m_right;
 	};
 
-	class IntLiteral : public Expr {
+	class IntLiteralAST : public virtual ExprAST {
 	public:
-		IntLiteral(const String<char_type> &numString) {
+		IntLiteralAST(const String<char_type> &numString) {
 			int res = 0;
 			for (uint i = 0; i < numString.size(); i++) {
 				res *= 10;
@@ -53,28 +37,46 @@ namespace stone {
 			}
 			m_value = res;
 		}
-		int value() {
+		int value() const {
 			return m_value;
 		}
 	private:
 		int m_value;
 	};
 
-	class UnaryOp : public Expr {
-		enum OpType {
-			NONE,
-			POSITIVE, NEGATIVE,
-		};
-		OpType m_op;
-		Expr *m_operand;
+	class UnaryOpAST : public virtual ExprAST {
+	public:
+		UnaryOpAST(Operator *op_, ExprAST *operand_) {
+			m_op = op_;
+			m_operand = operand_;
+		}
+	private:
+		Operator *m_op;
+		ExprAST *m_operand;
 	};
 
-	class Var : public Expr {
+	class VarAST : public virtual ExprAST {
 	public:
+		VarAST(const String<char_type> &varName_) {
+			m_varName = varName_;
+		}
 		const ds::String<char_type> &varName() const {
 			return m_varName;
 		}
 	private:
 		ds::String<char_type> m_varName;
+	};
+
+	class ASTVisitor {
+	public:
+		virtual void visit(AST *) = 0;
+		virtual void visit(ExprAST *) = 0;
+		virtual void visit(BinaryOpAST *) = 0;
+		virtual void visit(IntLiteralAST *) = 0;
+		virtual void visit(UnaryOpAST *) = 0;
+		virtual void visit(VarAST *) = 0;
+		~ASTVisitor() {
+		}
+	private:
 	};
 }

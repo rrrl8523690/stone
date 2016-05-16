@@ -22,6 +22,9 @@
     <Filter Include="头文件\stone">
       <UniqueIdentifier>{5af0e91d-aa06-4a0b-82ce-b1aa2b99c4b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\test">
+      <UniqueIdentifier>{6ccdebde-020e-4629-bd1b-cd34bb4dad30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="Parser.hpp">
       <Filter>头文件\stone</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.hpp">
+      <Filter>头文件\test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

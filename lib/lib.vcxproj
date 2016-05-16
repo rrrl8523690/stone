@@ -161,6 +161,7 @@
     <ClInclude Include="StringUnitTest.hpp" />
     <ClInclude Include="Token.hpp" />
     <ClInclude Include="UnitTest.hpp" />
+    <ClInclude Include="Visitor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib.cpp" />
