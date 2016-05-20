@@ -81,6 +81,9 @@
     <ClInclude Include="Visitor.hpp">
       <Filter>头文件\test</Filter>
     </ClInclude>
+    <ClInclude Include="ASTPrinter.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

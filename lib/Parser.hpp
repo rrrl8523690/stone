@@ -6,35 +6,114 @@
 
 namespace stone {
 	typedef typename char char_type;
+	using std::cerr;
+	using std::endl;
 	class Parser {
 	public:
 		Parser(Lexer *lexer) {
 			m_lexer = lexer;
 		}
 		AST *parse() {
-			AST *result = parseExpr(0);
+			AST *result = parseStmt();
 			if (!m_lexer->isEnd()) { // TODO: error!
+				std::cerr << "!" << std::endl;
 			}
+			if (!result)
+				cerr << "null result";
 			return result;
-		}
-		UnaryOpAST *parseUnaryOp() {
 		}
 		ExprAST *parseExpr(uint precedence) { // Expr(p) -> P {B Expr(q)}
 			ExprAST *t = parseP();
 			Token *token;
-			while ((token = m_lexer->read())->type() == Token::OP
+			while (!m_lexer->isEnd() && (token = m_lexer->peek(0))->type() == Token::OP
 				&& getPrecedence(token->string(), 2) >= precedence) {
+				token = m_lexer->read();
 				Operator *op = (dynamic_cast<OpToken*>(token))->getOperator(2);
-				uint newPrecedence = (op->associativity() == Operator::RIGHT) ? precedence : precedence + 1;
+				uint newPrecedence = (op->associativity() == Operator::RIGHT)
+					? op->precedence() : op->precedence() + 1;
 				ExprAST *t1 = parseExpr(newPrecedence);
 				t = new BinaryOpAST(t, op, t1);
 			}
 			return t;
 		}
+
+		IfStmtAST *parseIfStmt() { // if (condition) statement [else statement]
+			IfStmtAST *result = nullptr;
+			if (m_lexer->expect("if")) {
+				if (m_lexer->expect("(")) {
+					ExprAST *conditionExpr = parseExpr(0);
+					if (m_lexer->expect(")")) {
+						StmtAST *trueStmt = parseStmt(), *elseStmt = nullptr;
+						if (!m_lexer->isEnd()) {
+							Token *token = m_lexer->peek(0);
+							if (token->type() == Token::ID && token->string() == "else") {
+								m_lexer->read();
+								elseStmt = parseStmt();
+							}
+						}
+						result = new IfStmtAST(conditionExpr, trueStmt, elseStmt);
+					} else { // TODO: error
+					}
+				} else { //TODO: error
+				}
+			} else { //TODO: error
+			}
+			return result;
+		}
+
+		BlockAST *parseBlockWithBraces() {
+			BlockAST *result = new BlockAST();
+			//cerr << m_lexer->peek(0)->string() << m_lexer->peek(1)->string() << endl;
+			if (m_lexer->expect("{")) {
+				while (!m_lexer->isEnd()) {
+					Token *token = m_lexer->peek(0);
+					if (token->type() == Token::SYM && token->string() == "}") {
+						m_lexer->read();
+						return result;
+					} else { // TODO: error
+					}
+					result->append(parseStmt());
+				}
+			} else { // TODO: error
+			}
+		}
+
+
+		StmtAST *parseStmt() {
+			Token *firstToken = m_lexer->peek(0);
+			StmtAST *result = nullptr;
+			if (firstToken->type() == Token::ID) {
+				if (firstToken->string() == "if") {
+					result = parseIfStmt();
+				} else { // TODO: add while / for ...
+					result = parseExpr(0);
+					//cerr << (result == nullptr) << endl;
+					if (!m_lexer->expect(";")) { // error
+					}
+				}
+			} else if (firstToken->type() == Token::SYM) {
+				if (firstToken->string() == "{") {
+					result = parseBlockWithBraces();
+				} else if (firstToken->string() == ";") {
+					m_lexer->read();
+					return nullptr;
+				}
+			} else if (firstToken->type() == Token::NUM) { // TODO: 
+				result = parseExpr(0);
+				//cerr << (result == nullptr) << endl;
+				if (!m_lexer->expect(";")) { // error
+				}
+			} else {
+
+			}
+			return result;
+		}
+
 		ExprAST *parseP() {
 			Token *firstToken = m_lexer->read();
-			ExprAST *result;
-			if (firstToken->type() == Token::OP) {
+			ExprAST *result = nullptr;
+			//std::cerr << "parsing P" << std::endl;
+			if (firstToken->type() == Token::OP) { // P -> U Expr
 				Operator *op = dynamic_cast<OpToken*>(firstToken)->getOperator(1);
 				if (op) {
 					if (op->type() != Operator::POSITIVE) {
@@ -43,17 +122,20 @@ namespace stone {
 						result = parseExpr(op->precedence());
 					}
 				} else { // TODO: error
-
 				}
-			} else if (firstToken->type() == Token::SYM) {
+			} else if (firstToken->type() == Token::SYM) { // P -> "(" E ")"
 				if (firstToken->string() == "(") {
 					result = parseExpr(0);
 					Token *token = m_lexer->read();
 					if (token->type() != Token::SYM || token->string() != ")") { // TODO: error
 					}
+				} else { // TODO: error
+
 				}
-			} else if (firstToken->type() == Token::ID) {
+			} else if (firstToken->type() == Token::ID) { // P -> v
 				result = new VarAST(firstToken->string());
+			} else if (firstToken->type() == Token::NUM) {
+				result = new IntLiteralAST(firstToken->string());
 			} else { // TODO: error
 			}
 			return result;

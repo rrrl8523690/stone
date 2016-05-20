@@ -60,6 +60,7 @@ namespace stone {
 			RIGHT,
 		};
 		enum OpType {
+			ASSIGN,
 			ADD, SUB,
 			MUL, DIV,
 			ORELSE, ANDALSO,
@@ -99,18 +100,19 @@ namespace stone {
 		OpType m_opType;
 	};
 
-	extern Operator orElseOp("||", 0, Operator::LEFT, 2, Operator::ORELSE);
-	extern Operator andAlsoOp("&&", 1, Operator::LEFT, 2, Operator::ANDALSO);
-	extern Operator equalOp("==", 2, Operator::LEFT, 2, Operator::EQUAL);
-	extern Operator notEqualOp("!=", 2, Operator::LEFT, 2, Operator::NOTEQUAL);
-	extern Operator addOp("+", 3, Operator::LEFT, 2, Operator::ADD);
-	extern Operator subOp("-", 3, Operator::LEFT, 2, Operator::SUB);
-	extern Operator mulOp("*", 5, Operator::LEFT, 2, Operator::MUL);
-	extern Operator divOp("/", 5, Operator::LEFT, 2, Operator::DIV);
-	extern Operator negativeOp("-", 4, Operator::LEFT, 2, Operator::NEGATIVE);
-	extern Operator positiveOp("+", 4, Operator::LEFT, 2, Operator::POSITIVE);
+	extern Operator assignOp("=", 0, Operator::RIGHT, 2, Operator::ASSIGN);
+	extern Operator orElseOp("||", 2, Operator::LEFT, 2, Operator::ORELSE);
+	extern Operator andAlsoOp("&&", 3, Operator::LEFT, 2, Operator::ANDALSO);
+	extern Operator equalOp("==", 4, Operator::LEFT, 2, Operator::EQUAL);
+	extern Operator notEqualOp("!=", 4, Operator::LEFT, 2, Operator::NOTEQUAL);
+	extern Operator addOp("+", 5, Operator::LEFT, 2, Operator::ADD);
+	extern Operator subOp("-", 5, Operator::LEFT, 2, Operator::SUB);
+	extern Operator mulOp("*", 7, Operator::LEFT, 2, Operator::MUL);
+	extern Operator divOp("/", 7, Operator::LEFT, 2, Operator::DIV);
+	extern Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
+	extern Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
 
-	Array <Operator*> opArray = { &orElseOp, &andAlsoOp, &equalOp, &addOp, &subOp, &mulOp, &divOp , &positiveOp, &negativeOp };
+	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &addOp, &subOp, &mulOp, &divOp , &positiveOp, &negativeOp };
 
 	class OpToken : public Token {
 	public:
