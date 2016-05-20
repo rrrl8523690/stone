@@ -32,7 +32,7 @@ void stoneTest() {
 	std::cerr << code << std::endl;
 	Lexer *lexer = new Lexer(&code);
 	Token *token;
-	String<> descriptor[] = { "Id", "Str", "Num",  "Err", "Op", "Sym", };
+	String<> descriptor[] = { "Id", "Keyword", "Str", "Num",  "Err", "Op", "Sym", };
 	uint lastLineNumber = 1;
 	while (token = lexer->read()) {
 		if (lastLineNumber != token->lineNumber())

@@ -72,6 +72,16 @@ namespace stone {
 		bool isLetter(char_type ch) {
 			return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z');
 		}
+		bool isInStringSet(const String<char_type> &string, const Array<String<char_type> > &stringSet) {
+			for (uint i = 0; i < stringSet.size(); i++)
+				if (string == stringSet[i])
+					return true;
+			return false;
+		}
+		bool isKeyword(const String<char_type> &string) {
+			static Array<String<char_type> > keywordSet = { "if", "else", "while", "for" };
+			return isInStringSet(string, keywordSet);
+		}
 		bool fillAToken(Reader<char_type> *reader) {
 			char_type ch;
 			while (!reader->isEnd()) {
@@ -83,7 +93,7 @@ namespace stone {
 			if (reader->isEnd())
 				return false;
 			String<char_type> string;
-			if ('_' == ch || isLetter(ch)) { // IdToken
+			if ('_' == ch || isLetter(ch)) { // IdToken or KeywordToken
 				while (!reader->isEnd()) {
 					ch = reader->read();
 					if (isLetter(ch) || '_' == ch || isNum(ch))
@@ -92,7 +102,10 @@ namespace stone {
 						break;
 					reader->next();
 				}
-				m_tokens.append(new IdToken(string, m_lineNumber));
+				if (isKeyword(string))
+					m_tokens.append(new KeywordToken(string, m_lineNumber));
+				else
+					m_tokens.append(new IdToken(string, m_lineNumber));
 				return true;
 			} else if (isNum(ch)) { // NumToken
 				int visDot = 0;

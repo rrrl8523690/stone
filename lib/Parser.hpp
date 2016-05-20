@@ -46,7 +46,7 @@ namespace stone {
 						StmtAST *trueStmt = parseStmt(), *elseStmt = nullptr;
 						if (!m_lexer->isEnd()) {
 							Token *token = m_lexer->peek(0);
-							if (token->type() == Token::ID && token->string() == "else") {
+							if (token->type() == Token::KEYWORD && token->string() == "else") {
 								m_lexer->read();
 								elseStmt = parseStmt();
 							}
@@ -82,14 +82,9 @@ namespace stone {
 		StmtAST *parseStmt() {
 			Token *firstToken = m_lexer->peek(0);
 			StmtAST *result = nullptr;
-			if (firstToken->type() == Token::ID) {
+			if (firstToken->type() == Token::KEYWORD) {
 				if (firstToken->string() == "if") {
 					result = parseIfStmt();
-				} else { // TODO: add while / for ...
-					result = parseExpr(0);
-					//cerr << (result == nullptr) << endl;
-					if (!m_lexer->expect(";")) { // error
-					}
 				}
 			} else if (firstToken->type() == Token::SYM) {
 				if (firstToken->string() == "{") {
@@ -98,9 +93,8 @@ namespace stone {
 					m_lexer->read();
 					return nullptr;
 				}
-			} else if (firstToken->type() == Token::NUM) { // TODO: 
-				result = parseExpr(0);
-				//cerr << (result == nullptr) << endl;
+			} else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO: 
+				result = new ExprStmtAST(parseExpr(0));
 				if (!m_lexer->expect(";")) { // error
 				}
 			} else {

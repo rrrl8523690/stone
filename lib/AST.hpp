@@ -66,11 +66,26 @@ namespace stone {
 		Array<StmtAST*> *m_stmtArray;
 	};
 
-	class ExprAST : public virtual StmtAST {
+	class ExprAST : public virtual AST {
 	public:
 		void accept(ASTVisitor *visitor);
 		virtual ~ExprAST() {
 		}
+	};
+
+	class ExprStmtAST : public virtual StmtAST {
+	public:
+		ExprStmtAST(ExprAST *expr_) {
+			m_expr = expr_;
+		}
+		void accept(ASTVisitor *visitor);
+		virtual ~ExprStmtAST() {
+		}
+		ExprAST *expr() const {
+			return m_expr;
+		}
+	private:
+		ExprAST *m_expr;
 	};
 
 	class BinaryOpAST : public virtual ExprAST {
@@ -161,6 +176,7 @@ namespace stone {
 		virtual void visit(IfStmtAST *) = 0;
 		virtual void visit(BlockAST *) = 0;
 		virtual void visit(ExprAST *) = 0;
+		virtual void visit(ExprStmtAST *) = 0;
 		virtual void visit(BinaryOpAST *) = 0;
 		virtual void visit(IntLiteralAST *) = 0;
 		virtual void visit(UnaryOpAST *) = 0;
@@ -182,6 +198,9 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void ExprAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void ExprStmtAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void BinaryOpAST::accept(ASTVisitor *visitor) {

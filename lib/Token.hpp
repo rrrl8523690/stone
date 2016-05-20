@@ -8,6 +8,7 @@ namespace stone {
 	public:
 		enum TokenType {
 			ID,
+			KEYWORD,
 			STR,
 			NUM,
 			ERR,
@@ -40,6 +41,16 @@ namespace stone {
 		}
 		TokenType type() {
 			return ID;
+		}
+	};
+
+	class KeywordToken : public Token {
+	public:
+		KeywordToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+
+		}
+		TokenType type() {
+			return KEYWORD;
 		}
 	};
 

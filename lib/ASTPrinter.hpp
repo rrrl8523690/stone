@@ -22,11 +22,7 @@ namespace stone {
 			if (ast->condition())
 				ast->condition()->accept(this);
 			m_os << ")" << endl;
-			{
-				m_depth++;
-				ast->trueStmt()->accept(this);
-				m_depth--;
-			}
+			ast->trueStmt()->accept(this);
 			if (ast->elseStmt()) {
 				printTab();
 				m_os << "else " << endl;
@@ -56,7 +52,7 @@ namespace stone {
 						printTab();
 						m_os << "Empty Statement";
 					}
-					m_os << endl;
+					//m_os << endl;
 				}
 				m_depth--;
 			}
@@ -65,6 +61,11 @@ namespace stone {
 		}
 		void visit(ExprAST *) {
 
+		}
+		void visit(ExprStmtAST *ast) {
+			printTab();
+			ast->expr()->accept(this);
+			m_os << ";" << endl;
 		}
 		void visit(BinaryOpAST *ast) {
 			m_os << "(";
@@ -88,7 +89,7 @@ namespace stone {
 	private:
 		void printTab() {
 			for (uint i = 0; i < m_depth; i++)
-				m_os << "  ";
+				m_os << "    ";
 		}
 		uint m_depth;
 		ostream &m_os;
