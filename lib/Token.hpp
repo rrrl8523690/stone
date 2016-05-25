@@ -4,6 +4,23 @@
 namespace stone {
 	using namespace ds;
 	typedef char char_type;
+
+	class CodePosition {
+	public:
+		CodePosition(uint line_, uint kth_) {
+			m_line = line_;
+			m_kth = kth_;
+		}
+		inline uint line() const {
+			return m_line;
+		}
+		inline uint kth() const {
+			return m_kth;
+		}
+	private:
+		uint m_line, m_kth;
+	};
+
 	class Token {
 	public:
 		enum TokenType {
@@ -15,15 +32,17 @@ namespace stone {
 			OP,
 			SYM
 		};
-		Token(const String<char_type> &string, uint lineNumber) {
+		Token(const String<char_type> &string, uint lineNumber_, uint kth_) : m_codePosition(lineNumber_, kth_) {
 			m_string = string;
-			m_lineNumber = lineNumber;
 		}
 		virtual const String<char_type> &string() const {
 			return m_string;
 		}
 		virtual uint lineNumber() const {
-			return m_lineNumber;
+			return m_codePosition.line();
+		}
+		virtual uint kth() const {
+			return m_codePosition.kth();
 		}
 		virtual TokenType type() = 0;
 		virtual ~Token() {
@@ -31,12 +50,12 @@ namespace stone {
 		}
 	private:
 		String<char_type> m_string;
-		uint m_lineNumber;
+		CodePosition m_codePosition;
 	};
 
 	class IdToken : public Token {
 	public:
-		IdToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		IdToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 
 		}
 		TokenType type() {
@@ -46,7 +65,7 @@ namespace stone {
 
 	class KeywordToken : public Token {
 	public:
-		KeywordToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		KeywordToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 
 		}
 		TokenType type() {
@@ -56,7 +75,7 @@ namespace stone {
 
 	class NumToken : public Token {
 	public:
-		NumToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		NumToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 
 		}
 		TokenType type() {
@@ -127,7 +146,7 @@ namespace stone {
 
 	class OpToken : public Token {
 	public:
-		OpToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		OpToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 
 		}
 		Operator *getOperator(uint operandNum) {
@@ -143,7 +162,7 @@ namespace stone {
 	};
 	class SymToken : public Token {
 	public:
-		SymToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		SymToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 
 		}
 		TokenType type() {
@@ -153,7 +172,7 @@ namespace stone {
 
 	class ErrToken : public Token {
 	public:
-		ErrToken(const String<char_type> &string, uint lineNumber) : Token(string, lineNumber) {
+		ErrToken(const String<char_type> &string, uint lineNumber_, uint kth_) : Token(string, lineNumber_, kth_) {
 		}
 		TokenType type() {
 			return ERR;

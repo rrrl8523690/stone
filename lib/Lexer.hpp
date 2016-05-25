@@ -84,6 +84,7 @@ namespace stone {
 		}
 		bool fillAToken(Reader<char_type> *reader) {
 			char_type ch;
+			m_kth++;
 			while (!reader->isEnd()) {
 				ch = reader->read();
 				if (!isBlankChar(ch))
@@ -103,9 +104,9 @@ namespace stone {
 					reader->next();
 				}
 				if (isKeyword(string))
-					m_tokens.append(new KeywordToken(string, m_lineNumber));
+					m_tokens.append(new KeywordToken(string, m_lineNumber, m_kth));
 				else
-					m_tokens.append(new IdToken(string, m_lineNumber));
+					m_tokens.append(new IdToken(string, m_lineNumber, m_kth));
 				return true;
 			} else if (isNum(ch)) { // NumToken
 				int visDot = 0;
@@ -118,9 +119,9 @@ namespace stone {
 					reader->next();
 				}
 				if (visDot <= 1)
-					m_tokens.append(new NumToken(string, m_lineNumber));
+					m_tokens.append(new NumToken(string, m_lineNumber, m_kth));
 				else
-					m_tokens.append(new ErrToken(string, m_lineNumber));
+					m_tokens.append(new ErrToken(string, m_lineNumber, m_kth));
 			} else if (isOp(ch)) { // OpToken
 				string.append(ch);
 				reader->next();
@@ -130,13 +131,13 @@ namespace stone {
 					string.append(ch2);
 					reader->next();
 				}
-				m_tokens.append(new OpToken(string, m_lineNumber));
+				m_tokens.append(new OpToken(string, m_lineNumber, m_kth));
 			} else if (isSymbol(ch)) {
 				string.append(ch);
-				m_tokens.append(new SymToken(string, m_lineNumber));
+				m_tokens.append(new SymToken(string, m_lineNumber, m_kth));
 				reader->next();
 			} else { //ErrToken
-				m_tokens.append(new ErrToken(string, m_lineNumber));
+				m_tokens.append(new ErrToken(string, m_lineNumber, m_kth));
 				reader->next();
 			}
 			return true;
@@ -151,6 +152,7 @@ namespace stone {
 					fillAToken(lineReader);
 				}
 				m_lineNumber++;
+				m_kth = 0;
 			}
 			return m_tokens.size() - m_head >= atLeast;
 		}
@@ -158,6 +160,6 @@ namespace stone {
 		Reader<char_type> *m_reader;
 		Array<Token*> m_tokens;
 		uint m_head;
-		uint m_lineNumber;
+		uint m_lineNumber, m_kth;
 	};
 }

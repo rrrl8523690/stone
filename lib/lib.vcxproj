@@ -150,6 +150,7 @@
     <ClInclude Include="AST.hpp" />
     <ClInclude Include="ASTPrinter.hpp" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Message.hpp" />
     <ClInclude Include="Iterator.hpp" />
     <ClInclude Include="Lexer.hpp" />
     <ClInclude Include="Parser.hpp" />

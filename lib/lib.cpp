@@ -37,7 +37,7 @@ void stoneTest() {
 	while (token = lexer->read()) {
 		if (lastLineNumber != token->lineNumber())
 			std::cerr << std::endl;
-		std::cerr << "(" << descriptor[token->type()] << ", " << token->string() << ")" << " ";
+		std::cerr << "(" << descriptor[token->type()] << ", " << token->string() << ", " << token->lineNumber() << ", " << token->kth() << ")" << " ";
 		//if (token->type() == Token::OP) {
 			//if (((OpToken*)token)->getOperator(2))
 				//std::cerr << ((OpToken*)token)->getOperator(2)->type() << std::endl;
