@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include "Array.hpp"
 #include "String.hpp"
+#include "Message.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
 #include "Lexer.hpp"
@@ -46,8 +47,10 @@ void stoneTest() {
 	}
 	cerr << endl << endl;
 	lexer = new Lexer(&code);
-	Parser *parser = new Parser(lexer);
+	MsgHandler *msgHandler = new MsgPrinter(std::cerr);
+	Parser *parser = new Parser(lexer, msgHandler);
 	AST *ast = parser->parse();
+	cerr << endl;
 	ASTVisitor *visitor = new ASTPrinter(std::cerr);
 	if (!ast)cerr << "null ast" << endl;
 	ast->accept(visitor);

@@ -14,6 +14,12 @@ namespace stone {
 		Message(const String<char_type> &text_) {
 			m_text = text_;
 		}
+		const String<char_type> &text() const {
+			return m_text;
+		}
+		virtual const String<char_type> textToPrint() const {
+			return m_text;
+		}
 		virtual MessageType type() {
 			return MSG;
 		}
@@ -24,20 +30,32 @@ namespace stone {
 	};
 
 
-	class CodeMsg : virtual public Message, virtual public CodePosition {
+	class CodeMsg : public Message, public CodePosition {
 	public:
-	private:
-	};
+		CodeMsg(const String<char_type> &text_, CodePosition codePos_) : Message(text_), CodePosition(codePos_) {
 
-	class Error : virtual public CodeMsg {
-	public:
-		MessageType type() {
-			return ERR;
+		}
+		const String<char_type> textToPrint() const {
+			return String<char_type>::number(line()) + ", " + String<char_type>::number(kth()) + ": " + Message::text();
 		}
 	private:
 	};
 
-	class Warning : virtual public CodeMsg {
+	class Error : public CodeMsg {
+	public:
+		Error(const String<char_type> &string, const CodePosition &codePos_) : CodeMsg(string, codePos_) {
+
+		}
+		MessageType type() {
+			return ERR;
+		}
+		const String<char_type> textToPrint() const {
+			return String<char_type>("Error at ") + CodeMsg::textToPrint();
+		}
+	private:
+	};
+
+	class Warning : public CodeMsg {
 	public:
 		MessageType type() {
 			return WARN;
@@ -48,10 +66,21 @@ namespace stone {
 	class MsgHandler {
 	public:
 		virtual void receive(Message *) = 0;
-		
+
 	private:
 	};
 
-
+	class MsgPrinter : public MsgHandler {
+	public:
+		MsgPrinter(std::ostream &os) : m_os(os) {
+		}
+		void receive(Message *message) {
+			m_msgArray.append(message);
+			m_os << message->textToPrint() << std::endl;
+		}
+	private:
+		std::ostream &m_os;
+		Array<Message *> m_msgArray;
+	};
 
 }

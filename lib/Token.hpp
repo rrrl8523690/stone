@@ -38,6 +38,9 @@ namespace stone {
 		virtual const String<char_type> &string() const {
 			return m_string;
 		}
+		virtual const CodePosition &codePosition() const {
+			return m_codePosition;
+		}
 		virtual uint lineNumber() const {
 			return m_codePosition.line();
 		}

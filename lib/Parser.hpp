@@ -3,6 +3,7 @@
 #include "Lexer.hpp"
 #include "String.hpp"
 #include "AST.hpp"
+#include "Message.hpp"
 
 namespace stone {
 	typedef typename char char_type;
@@ -10,13 +11,18 @@ namespace stone {
 	using std::endl;
 	class Parser {
 	public:
-		Parser(Lexer *lexer) {
+		Parser(Lexer *lexer, MsgHandler *msgHandler) {
 			m_lexer = lexer;
+			m_msgHandler = msgHandler;
+		}
+		~Parser() {
+			delete m_lexer;
+			delete m_msgHandler;
 		}
 		AST *parse() {
 			AST *result = parseStmt();
 			if (!m_lexer->isEnd()) { // TODO: error!
-				std::cerr << "!" << std::endl;
+				std::cerr << "not end!" << std::endl;
 			}
 			if (!result)
 				cerr << "null result";
@@ -26,9 +32,12 @@ namespace stone {
 			ExprAST *t = parseP();
 			Token *token;
 			while (!m_lexer->isEnd() && (token = m_lexer->peek(0))->type() == Token::OP
-				&& getPrecedence(token->string(), 2) >= precedence) {
-				token = m_lexer->read();
+				) {
+				//getPrecedence(token->string(), 2) >= precedence;
 				Operator *op = (dynamic_cast<OpToken*>(token))->getOperator(2);
+				if (op->precedence() < precedence)
+					break;
+				m_lexer->read();
 				uint newPrecedence = (op->associativity() == Operator::RIGHT)
 					? op->precedence() : op->precedence() + 1;
 				ExprAST *t1 = parseExpr(newPrecedence);
@@ -39,42 +48,34 @@ namespace stone {
 
 		IfStmtAST *parseIfStmt() { // if (condition) statement [else statement]
 			IfStmtAST *result = nullptr;
-			if (m_lexer->expect("if")) {
-				if (m_lexer->expect("(")) {
-					ExprAST *conditionExpr = parseExpr(0);
-					if (m_lexer->expect(")")) {
-						StmtAST *trueStmt = parseStmt(), *elseStmt = nullptr;
-						if (!m_lexer->isEnd()) {
-							Token *token = m_lexer->peek(0);
-							if (token->type() == Token::KEYWORD && token->string() == "else") {
-								m_lexer->read();
-								elseStmt = parseStmt();
-							}
-						}
-						result = new IfStmtAST(conditionExpr, trueStmt, elseStmt);
-					} else { // TODO: error
-					}
-				} else { //TODO: error
+			expect("if");
+			expect("(");
+			ExprAST *conditionExpr = parseExpr(0);
+			expect(")");
+			StmtAST *trueStmt = parseStmt(), *elseStmt = nullptr;
+			if (!m_lexer->isEnd()) {
+				Token *token = m_lexer->peek(0);
+				if (token->type() == Token::KEYWORD && token->string() == "else") {
+					m_lexer->read();
+					elseStmt = parseStmt();
 				}
-			} else { //TODO: error
 			}
+			result = new IfStmtAST(conditionExpr, trueStmt, elseStmt);
 			return result;
 		}
 
 		BlockAST *parseBlockWithBraces() {
 			BlockAST *result = new BlockAST();
 			//cerr << m_lexer->peek(0)->string() << m_lexer->peek(1)->string() << endl;
-			if (m_lexer->expect("{")) {
-				while (!m_lexer->isEnd()) {
-					Token *token = m_lexer->peek(0);
-					if (token->type() == Token::SYM && token->string() == "}") {
-						m_lexer->read();
-						return result;
-					} else { // TODO: error
-					}
-					result->append(parseStmt());
+			expect("{");
+			while (!m_lexer->isEnd()) {
+				Token *token = m_lexer->peek(0);
+				if (token->type() == Token::SYM && token->string() == "}") {
+					m_lexer->read();
+					return result;
+				} else { // TODO: error
 				}
-			} else { // TODO: error
+				result->append(parseStmt());
 			}
 		}
 
@@ -95,8 +96,7 @@ namespace stone {
 				}
 			} else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO: 
 				result = new ExprStmtAST(parseExpr(0));
-				if (!m_lexer->expect(";")) { // error
-				}
+				expect(";");
 			} else {
 
 			}
@@ -135,26 +135,15 @@ namespace stone {
 			return result;
 		}
 
-	private:
-		static uint getPrecedence(const String<char_type> &op, const uint operandNum) {
-			if (operandNum == 1) {
-				if (op == "+" || op == "-")
-					return 4;
-			} else if (operandNum == 2) {
-				if (op == "||")
-					return 0;
-				if (op == "&&")
-					return 1;
-				if (op == "=")
-					return 2;
-				if (op == "+" || op == "-")
-					return 3;
-				if (op == "*" || op == "/")
-					return 5;
-				if (op == "^")
-					return 6;
+		void expect(const String<char_type> &string) {
+			CodePosition pos(m_lexer->peek(0)->codePosition());
+			if (!m_lexer->expect(string)) {
+				m_msgHandler->receive(new Error(String<char_type>("expected ") + string, pos));
 			}
 		}
+
+	private:
 		Lexer *m_lexer;
+		MsgHandler *m_msgHandler;
 	};
 }

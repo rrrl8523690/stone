@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Array.hpp"
+#include <sstream>
 
 namespace ds {
 	template<class T = char>
@@ -10,6 +11,7 @@ namespace ds {
 		String(const T *string);
 		String(const String<T>& anotherString);
 		String(String<T>&& anotherString);
+		static String<T> number(int);
 		String<T>& append(const T& character);
 		String<T> subString(const uint& l, const uint& r) const;
 		String<T>& operator=(const String<T>& anotherString);
@@ -82,6 +84,17 @@ namespace ds {
 	inline String<T>& String<T>::append(const T& character) {
 		Array<T>::append(character);
 		return *this;
+	}
+
+	template<class T>
+	String<T> String<T>::number(int num) {
+		std::ostringstream oss;
+		oss << num;
+		std::string str = oss.str();
+		String<T> res;
+		for (uint i = 0; i < str.size(); i++)
+			res.append(str[i]);
+		return res;
 	}
 
 	template<class T>
