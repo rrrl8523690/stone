@@ -64,6 +64,16 @@ namespace stone {
 			return result;
 		}
 
+		WhileStmtAST *parseWhileStmt() {
+			expect("while");
+			expect("(");
+			ExprAST *condition = parseExpr(0);
+			expect(")");
+			StmtAST *trueStmt = parseStmt();
+			WhileStmtAST *result = new WhileStmtAST(condition, trueStmt);
+			return result;
+		}
+
 		BlockAST *parseBlockWithBraces() {
 			BlockAST *result = new BlockAST();
 			//cerr << m_lexer->peek(0)->string() << m_lexer->peek(1)->string() << endl;
@@ -86,6 +96,8 @@ namespace stone {
 			if (firstToken->type() == Token::KEYWORD) {
 				if (firstToken->string() == "if") {
 					result = parseIfStmt();
+				} else if (firstToken->string() == "while") {
+					result = parseWhileStmt();
 				}
 			} else if (firstToken->type() == Token::SYM) {
 				if (firstToken->string() == "{") {

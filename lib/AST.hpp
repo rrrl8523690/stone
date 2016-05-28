@@ -15,14 +15,14 @@ namespace stone {
 		}
 	};
 
-	class StmtAST : public virtual AST {
+	class StmtAST : public AST {
 	public:
 		void accept(ASTVisitor *visitor);
 		~StmtAST() {
 		}
 	};
 
-	class IfStmtAST : public virtual StmtAST {
+	class IfStmtAST : public StmtAST {
 	public:
 		IfStmtAST(ExprAST *condition_, StmtAST *trueStmt_, StmtAST *elseStmt_) {
 			m_condition = condition_;
@@ -44,7 +44,25 @@ namespace stone {
 		StmtAST *m_trueStmt, *m_elseStmt;
 	};
 
-	class BlockAST : public virtual StmtAST {
+	class WhileStmtAST : public StmtAST {
+	public:
+		WhileStmtAST(ExprAST *condition_, StmtAST *trueStmt_) {
+			m_condition = condition_;
+			m_trueStmt = trueStmt_;
+		}
+		ExprAST *condition() const {
+			return m_condition;
+		}
+		StmtAST *trueStmt() const {
+			return m_trueStmt;
+		}
+		void accept(ASTVisitor *);
+	private:
+		ExprAST *m_condition;
+		StmtAST *m_trueStmt;
+	};
+
+	class BlockAST : public StmtAST {
 	public:
 		BlockAST() {
 			m_stmtArray = new Array<StmtAST*>();
@@ -66,14 +84,14 @@ namespace stone {
 		Array<StmtAST*> *m_stmtArray;
 	};
 
-	class ExprAST : public virtual AST {
+	class ExprAST : public AST {
 	public:
 		void accept(ASTVisitor *visitor);
 		virtual ~ExprAST() {
 		}
 	};
 
-	class ExprStmtAST : public virtual StmtAST {
+	class ExprStmtAST : public StmtAST {
 	public:
 		ExprStmtAST(ExprAST *expr_) {
 			m_expr = expr_;
@@ -88,7 +106,7 @@ namespace stone {
 		ExprAST *m_expr;
 	};
 
-	class BinaryOpAST : public virtual ExprAST {
+	class BinaryOpAST : public ExprAST {
 	public:
 		BinaryOpAST(ExprAST *left_, Operator *op_, ExprAST *right_) {
 			m_left = left_;
@@ -113,7 +131,7 @@ namespace stone {
 		ExprAST *m_left, *m_right;
 	};
 
-	class IntLiteralAST : public virtual ExprAST {
+	class IntLiteralAST : public ExprAST {
 	public:
 		IntLiteralAST(const String<char_type> &numString) {
 			int res = 0;
@@ -133,7 +151,7 @@ namespace stone {
 		int m_value;
 	};
 
-	class UnaryOpAST : public virtual ExprAST {
+	class UnaryOpAST : public ExprAST {
 	public:
 		UnaryOpAST(Operator *op_, ExprAST *operand_) {
 			m_op = op_;
@@ -153,7 +171,7 @@ namespace stone {
 		ExprAST *m_operand;
 	};
 
-	class VarAST : public virtual ExprAST {
+	class VarAST : public ExprAST {
 	public:
 		virtual ~VarAST() {
 
@@ -174,6 +192,7 @@ namespace stone {
 		virtual void visit(AST *) = 0;
 		virtual void visit(StmtAST *) = 0;
 		virtual void visit(IfStmtAST *) = 0;
+		virtual void visit(WhileStmtAST *) = 0;
 		virtual void visit(BlockAST *) = 0;
 		virtual void visit(ExprAST *) = 0;
 		virtual void visit(ExprStmtAST *) = 0;
@@ -192,6 +211,9 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void IfStmtAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void WhileStmtAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void BlockAST::accept(ASTVisitor *visitor) {

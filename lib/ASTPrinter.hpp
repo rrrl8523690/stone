@@ -22,7 +22,14 @@ namespace stone {
 			if (ast->condition())
 				ast->condition()->accept(this);
 			m_os << ")" << endl;
-			ast->trueStmt()->accept(this);
+			if (ast->trueStmt())
+				ast->trueStmt()->accept(this);
+			else {
+				m_depth++;
+				printTab();
+				m_depth--;
+				m_os << ";";
+			}
 			if (ast->elseStmt()) {
 				printTab();
 				m_os << "else " << endl;
@@ -36,6 +43,20 @@ namespace stone {
 					m_os << "}" << endl;
 				}
 			} else m_os << endl;
+		}
+		void visit(WhileStmtAST *ast) {
+			printTab();
+			m_os << "while ";
+			m_os << "(";
+			ast->condition()->accept(this);
+			m_os << ")" << endl;
+			printTab();
+			m_os << "{" << endl;
+			m_depth++;
+			ast->trueStmt()->accept(this);
+			m_depth--;
+			printTab();
+			m_os << "}" << endl;
 		}
 		void visit(BlockAST *ast) {
 			printTab();
@@ -62,6 +83,7 @@ namespace stone {
 		void visit(ExprAST *) {
 
 		}
+
 		void visit(ExprStmtAST *ast) {
 			printTab();
 			ast->expr()->accept(this);
