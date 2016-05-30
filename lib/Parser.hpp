@@ -89,6 +89,39 @@ namespace stone {
 			}
 		}
 
+		DefFuncStmtAST *parseDefFuncStmt() {
+			expect("def");
+			Token *funcNameToken = m_lexer->read();
+			String<char_type> funcName;
+			if (funcNameToken->type() == Token::ID) {
+				funcName = funcNameToken->string();
+			} else { // TODO: error
+			}
+			expect("(");
+			Array<ParamValuePair*> *params = new Array<ParamValuePair*>();
+			bool isFirstParam = true;
+			while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != ")") {
+				if (!isFirstParam) {
+					expect(",");
+				} else {
+					isFirstParam = false;
+				}
+				Token *token = m_lexer->read();
+				if (token->type() == Token::ID) {
+					String<char_type> paramName = token->string();
+					ExprAST *value = nullptr;
+					if (m_lexer->peek(0)->string() == "=") {
+						m_lexer->read();
+						value = parseExpr(0);
+					}
+					params->append(new ParamValuePair(paramName, value));
+				} else { //TODO: error
+				}
+			}
+			expect(")");
+			BlockAST *funcBody = parseBlockWithBraces();
+			return new DefFuncStmtAST(funcName, params, funcBody);
+		}
 
 		StmtAST *parseStmt() {
 			Token *firstToken = m_lexer->peek(0);
@@ -98,19 +131,20 @@ namespace stone {
 					result = parseIfStmt();
 				} else if (firstToken->string() == "while") {
 					result = parseWhileStmt();
+				} else if (firstToken->string() == "def") {
+					result = parseDefFuncStmt();
 				}
 			} else if (firstToken->type() == Token::SYM) {
 				if (firstToken->string() == "{") {
 					result = parseBlockWithBraces();
 				} else if (firstToken->string() == ";") {
 					m_lexer->read();
-					return nullptr;
+					return new StmtAST();
 				}
 			} else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO: 
 				result = new ExprStmtAST(parseExpr(0));
 				expect(";");
 			} else {
-
 			}
 			return result;
 		}

@@ -84,6 +84,50 @@ namespace stone {
 		Array<StmtAST*> *m_stmtArray;
 	};
 
+	class ParamValuePair : public AST {
+	public:
+		ParamValuePair(String<char_type> name_, ExprAST *value_) {
+			m_name = name_;
+			m_value = value_;
+		}
+		const String<char_type> &name() const {
+			return m_name;
+		}
+		ExprAST *value() const {
+			return m_value;
+		}
+		~ParamValuePair() {
+		}
+	private:
+		String<char_type> m_name;
+		ExprAST *m_value;
+	};
+
+	class DefFuncStmtAST : public StmtAST {
+	public:
+		DefFuncStmtAST(const String<char_type> &funcName_, Array<ParamValuePair*> *params_, BlockAST *funcBody_) {
+			m_funcName = funcName_;
+			m_params = params_;
+			m_funcBody = funcBody_;
+		}
+		~DefFuncStmtAST() {
+		}
+		void accept(ASTVisitor *visitor);
+		const String<char_type> &funcName() const {
+			return m_funcName;
+		}
+		BlockAST *funcBody() const {
+			return m_funcBody;
+		}
+		Array<ParamValuePair*> *params() const {
+			return m_params;
+		}
+	private:
+		String<char_type> m_funcName;
+		Array<ParamValuePair*> *m_params;
+		BlockAST *m_funcBody;
+	};
+
 	class ExprAST : public AST {
 	public:
 		void accept(ASTVisitor *visitor);
@@ -187,6 +231,7 @@ namespace stone {
 		ds::String<char_type> m_varName;
 	};
 
+
 	class ASTVisitor {
 	public:
 		virtual void visit(AST *) = 0;
@@ -194,6 +239,7 @@ namespace stone {
 		virtual void visit(IfStmtAST *) = 0;
 		virtual void visit(WhileStmtAST *) = 0;
 		virtual void visit(BlockAST *) = 0;
+		virtual void visit(DefFuncStmtAST *) = 0;
 		virtual void visit(ExprAST *) = 0;
 		virtual void visit(ExprStmtAST *) = 0;
 		virtual void visit(BinaryOpAST *) = 0;
@@ -217,6 +263,9 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void BlockAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void DefFuncStmtAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void ExprAST::accept(ASTVisitor *visitor) {

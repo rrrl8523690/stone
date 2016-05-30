@@ -15,6 +15,22 @@ namespace stone {
 		void visit(StmtAST *ast) {
 
 		}
+		void visit(DefFuncStmtAST *ast) {
+			printTab();
+			m_os << "def " << ast->funcName();
+			m_os << "(";
+			for (uint i = 0; i < ast->params()->size(); i++) {
+				if (i)
+					m_os << ", ";
+				m_os << ast->params()->at(i)->name();
+				if (ast->params()->at(i)->value()) {
+					m_os << " = ";
+					ast->params()->at(i)->value()->accept(this);
+				}
+			}
+			m_os << ")" << endl;
+			ast->funcBody()->accept(this);
+		}
 		void visit(IfStmtAST *ast) {
 			printTab();
 			m_os << "if ";

@@ -79,7 +79,7 @@ namespace stone {
 			return false;
 		}
 		bool isKeyword(const String<char_type> &string) {
-			static Array<String<char_type> > keywordSet = { "if", "else", "while", "for" };
+			static Array<String<char_type> > keywordSet = { "if", "else", "while", "for", "def"};
 			return isInStringSet(string, keywordSet);
 		}
 		bool fillAToken(Reader<char_type> *reader) {
