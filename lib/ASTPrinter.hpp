@@ -18,7 +18,7 @@ namespace stone {
 		void visit(DefFuncStmtAST *ast) {
 			printTab();
 			m_os << "def " << ast->funcName();
-			m_os << "(";
+			m_os << " (";
 			for (uint i = 0; i < ast->params()->size(); i++) {
 				if (i)
 					m_os << ", ";
@@ -30,6 +30,9 @@ namespace stone {
 			}
 			m_os << ")" << endl;
 			ast->funcBody()->accept(this);
+		}
+		void visit(CallFuncExprAST *ast) {
+
 		}
 		void visit(IfStmtAST *ast) {
 			printTab();

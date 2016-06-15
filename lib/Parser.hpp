@@ -89,15 +89,7 @@ namespace stone {
 			}
 		}
 
-		DefFuncStmtAST *parseDefFuncStmt() {
-			expect("def");
-			Token *funcNameToken = m_lexer->read();
-			String<char_type> funcName;
-			if (funcNameToken->type() == Token::ID) {
-				funcName = funcNameToken->string();
-			} else { // TODO: error
-			}
-			expect("(");
+		Array<ParamValuePair*> *parseParamList() {
 			Array<ParamValuePair*> *params = new Array<ParamValuePair*>();
 			bool isFirstParam = true;
 			while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != ")") {
@@ -118,6 +110,19 @@ namespace stone {
 				} else { //TODO: error
 				}
 			}
+			return params;
+		}
+
+		DefFuncStmtAST *parseDefFuncStmt() {
+			expect("def");
+			Token *funcNameToken = m_lexer->read();
+			String<char_type> funcName;
+			if (funcNameToken->type() == Token::ID) {
+				funcName = funcNameToken->string();
+			} else { // TODO: error
+			}
+			expect("(");
+			Array<ParamValuePair*> *params = parseParamList();
 			expect(")");
 			BlockAST *funcBody = parseBlockWithBraces();
 			return new DefFuncStmtAST(funcName, params, funcBody);
@@ -149,6 +154,10 @@ namespace stone {
 			return result;
 		}
 
+		ExprAST *parseCallFuncExpr() {
+			Token *firstToken = m_lexer->read();
+		}
+
 		ExprAST *parseP() {
 			Token *firstToken = m_lexer->read();
 			ExprAST *result = nullptr;
@@ -170,7 +179,6 @@ namespace stone {
 					if (token->type() != Token::SYM || token->string() != ")") { // TODO: error
 					}
 				} else { // TODO: error
-
 				}
 			} else if (firstToken->type() == Token::ID) { // P -> v
 				result = new VarAST(firstToken->string());

@@ -128,11 +128,24 @@ namespace stone {
 		BlockAST *m_funcBody;
 	};
 
+	class PostfixAST : public AST {
+	public:
+		~PostfixAST() {
+		}
+		void accept(ASTVisitor *);
+	};
+
 	class ExprAST : public AST {
 	public:
-		void accept(ASTVisitor *visitor);
-		virtual ~ExprAST() {
+		ExprAST(Array<PostfixAST*> *postfixes_ = nullptr) {
+			m_postfixes = postfixes_;
 		}
+		void accept(ASTVisitor *visitor);
+		const Array<PostfixAST*> *postfixes() const {
+			return m_postfixes;
+		}
+	private:
+		Array<PostfixAST*> *m_postfixes;
 	};
 
 	class ExprStmtAST : public StmtAST {
@@ -148,6 +161,42 @@ namespace stone {
 		}
 	private:
 		ExprAST *m_expr;
+	};
+
+	class IndexPostfixAST : public PostfixAST {
+	public:
+		void accept(ASTVisitor *);
+		ExprAST *indexExpr() const {
+			return m_indexExpr;
+		}
+	private:
+		ExprAST *m_indexExpr;
+	};
+
+	class MemberPostfixAST : public PostfixAST {
+	public:
+		MemberPostfixAST() {
+
+		}
+		void accept(ASTVisitor *visitor);
+		const String<char_type> &memberName() const {
+			return m_memberName;
+		}
+	private:
+		String<char_type> m_memberName;
+	};
+
+	class CallFuncPostfixAST : public PostfixAST {
+	public:
+		CallFuncPostfixAST(Array<ParamValuePair*> *params_) {
+			m_params = params_;
+		}
+		void accept(ASTVisitor *visitor);
+		const Array<ParamValuePair*> *params() const {
+			return m_params;
+		}
+	private:
+		Array<ParamValuePair*> *m_params;
 	};
 
 	class BinaryOpAST : public ExprAST {
