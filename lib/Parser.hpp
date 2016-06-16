@@ -90,7 +90,21 @@ namespace stone {
 			return result;
 		}
 
-		Array<ParamValuePair*> *parseParams() {
+		Array<ExprAST*> *parseActualParams() {
+			Array<ExprAST*> *params = new Array<ExprAST*>();
+			bool isFirstParam = true;
+			while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != ")") {
+				if (!isFirstParam) {
+					expect(",");
+				} else {
+					isFirstParam = false;
+				}
+				params->append(parseExpr(0));
+			}
+			return params;
+		}
+
+		Array<ParamValuePair*> *parseFormalParams() {
 			Array<ParamValuePair*> *params = new Array<ParamValuePair*>();
 			bool isFirstParam = true;
 			while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != ")") {
@@ -123,7 +137,7 @@ namespace stone {
 			} else { // TODO: error
 			}
 			expect("(");
-			Array<ParamValuePair*> *params = parseParams();
+			Array<ParamValuePair*> *params = parseFormalParams();
 			//cerr << "#" << m_lexer->peek(0)->string() << "#" << endl;
 			expect(")");
 			BlockAST *funcBody = parseBlockWithBraces();
@@ -151,7 +165,7 @@ namespace stone {
 			} else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO: 
 				result = new ExprStmtAST(parseExpr(0));
 				expect(";");
-			} else {
+			} else { // TODO: ERROR
 			}
 			return result;
 		}
@@ -173,8 +187,8 @@ namespace stone {
 					if (memberNameToken->type() != Token::ID) { // TODO: ERROR
 					}
 					result = new MemberPostfixAST(memberNameToken->string());
-				} else if (symbolToken->string() == "(") {
-					Array<ParamValuePair*> *params = parseParams();
+				} else if (symbolToken->string() == "(") { // TODO: fix
+					Array<ExprAST*> *params = parseActualParams();
 					expect(")");
 					result = new CallFuncPostfixAST(params);
 				}

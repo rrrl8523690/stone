@@ -198,15 +198,15 @@ namespace stone {
 
 	class CallFuncPostfixAST : public PostfixAST {
 	public:
-		CallFuncPostfixAST(Array<ParamValuePair*> *params_) {
+		CallFuncPostfixAST(Array<ExprAST*> *params_) {
 			m_params = params_;
 		}
 		void accept(ASTVisitor *visitor);
-		Array<ParamValuePair*> *params() const {
+		Array<ExprAST*> *params() const {
 			return m_params;
 		}
 	private:
-		Array<ParamValuePair*> *m_params;
+		Array<ExprAST*> *m_params;
 	};
 
 	class BinaryOpAST : public ExprAST {

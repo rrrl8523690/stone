@@ -13,7 +13,10 @@ namespace stone {
 
 		}
 		void visit(StmtAST *ast) {
-
+			m_depth++;
+			printTab();
+			m_os << ";" << endl;
+			m_depth--;
 		}
 		void visit(DefFuncStmtAST *ast) {
 			printTab();
@@ -38,9 +41,9 @@ namespace stone {
 			if (ast->condition())
 				ast->condition()->accept(this);
 			m_os << ")" << endl;
-			if (ast->trueStmt())
+			if (ast->trueStmt()) {
 				ast->trueStmt()->accept(this);
-			else {
+			} else {
 				m_depth++;
 				printTab();
 				m_depth--;
@@ -115,19 +118,17 @@ namespace stone {
 		void visit(MemberPostfixAST *ast) {
 			m_os << ".";
 			m_os << ast->memberName();
+			m_os << "";
 		}
 		void visit(CallFuncPostfixAST *ast) {
-			m_os << "( ";
+			m_os << "(";
 			for (uint i = 0; i < ast->params()->size(); i++) {
-				if (i)
+				if (i) {
 					m_os << ", ";
-				m_os << ast->params()->at(i)->name(); 
-				if (ast->params()->at(i)->value()) {
-					m_os << " = ";
-					ast->params()->at(i)->value()->accept(this);
 				}
+				ast->params()->at(i)->accept(this);
 			}
-			m_os << " )";
+			m_os << ")";
 		}
 		void visit(ExprStmtAST *ast) {
 			printTab();
@@ -140,18 +141,22 @@ namespace stone {
 			m_os << " " << ast->op()->string() << " ";
 			ast->right()->accept(this);
 			m_os << ")";
+			ast->ExprAST::accept(this);
 		}
 		void visit(IntLiteralAST *ast) {
 			m_os << ast->value();
+			ast->ExprAST::accept(this);
 		}
 		void visit(UnaryOpAST *ast) {
 			m_os << "(";
 			m_os << ast->op()->string() << " ";
 			ast->operand()->accept(this);
 			m_os << ")";
+			ast->ExprAST::accept(this);
 		}
 		void visit(VarAST *ast) {
 			m_os << ast->varName();
+			ast->ExprAST::accept(this);
 		}
 	private:
 		void printTab() {
