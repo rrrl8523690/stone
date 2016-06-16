@@ -87,9 +87,10 @@ namespace stone {
 				}
 				result->append(parseStmt());
 			}
+			return result;
 		}
 
-		Array<ParamValuePair*> *parseParamList() {
+		Array<ParamValuePair*> *parseParams() {
 			Array<ParamValuePair*> *params = new Array<ParamValuePair*>();
 			bool isFirstParam = true;
 			while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != ")") {
@@ -122,7 +123,8 @@ namespace stone {
 			} else { // TODO: error
 			}
 			expect("(");
-			Array<ParamValuePair*> *params = parseParamList();
+			Array<ParamValuePair*> *params = parseParams();
+			//cerr << "#" << m_lexer->peek(0)->string() << "#" << endl;
 			expect(")");
 			BlockAST *funcBody = parseBlockWithBraces();
 			return new DefFuncStmtAST(funcName, params, funcBody);
@@ -154,8 +156,31 @@ namespace stone {
 			return result;
 		}
 
-		ExprAST *parseCallFuncExpr() {
-			Token *firstToken = m_lexer->read();
+		PostfixAST *parsePostfix() {
+			if (m_lexer->isEnd())
+				return nullptr;
+			Token *symbolToken = m_lexer->peek(0);
+			PostfixAST *result = nullptr;
+			if (symbolToken->string() == "[" || symbolToken->string() == "." ||
+				symbolToken->string() == "(") {
+				Token *symbolToken = m_lexer->read();
+				if (symbolToken->string() == "[") { // array index: [Expr]
+					ExprAST *indexExprAST = parseExpr(0);
+					result = new IndexPostfixAST(indexExprAST);
+					expect("]");
+				} else if (symbolToken->string() == ".") { // member: .MemberName
+					Token *memberNameToken = m_lexer->read();
+					if (memberNameToken->type() != Token::ID) { // TODO: ERROR
+					}
+					result = new MemberPostfixAST(memberNameToken->string());
+				} else if (symbolToken->string() == "(") {
+					Array<ParamValuePair*> *params = parseParams();
+					expect(")");
+					result = new CallFuncPostfixAST(params);
+				}
+			} else { // TODO: ERROR
+			}
+			return result;
 		}
 
 		ExprAST *parseP() {
@@ -172,16 +197,20 @@ namespace stone {
 					}
 				} else { // TODO: error
 				}
-			} else if (firstToken->type() == Token::SYM) { // P -> "(" E ")"
+			} else if (firstToken->type() == Token::SYM) { // P -> "(" E ")" [Postfixes]
 				if (firstToken->string() == "(") {
 					result = parseExpr(0);
-					Token *token = m_lexer->read();
-					if (token->type() != Token::SYM || token->string() != ")") { // TODO: error
-					}
+					expect(")");
+					PostfixAST *postfix;
+					while (postfix = parsePostfix())
+						result->appendPostfix(postfix);
 				} else { // TODO: error
 				}
-			} else if (firstToken->type() == Token::ID) { // P -> v
+			} else if (firstToken->type() == Token::ID) { // P -> v [Postfixes]
 				result = new VarAST(firstToken->string());
+				PostfixAST *postfix;
+				while (postfix = parsePostfix())
+					result->appendPostfix(postfix);
 			} else if (firstToken->type() == Token::NUM) {
 				result = new IntLiteralAST(firstToken->string());
 			} else { // TODO: error

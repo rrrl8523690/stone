@@ -31,9 +31,6 @@ namespace stone {
 			m_os << ")" << endl;
 			ast->funcBody()->accept(this);
 		}
-		void visit(CallFuncExprAST *ast) {
-
-		}
 		void visit(IfStmtAST *ast) {
 			printTab();
 			m_os << "if ";
@@ -99,10 +96,39 @@ namespace stone {
 			printTab();
 			m_os << "}" << endl;
 		}
-		void visit(ExprAST *) {
+		void visit(ExprAST *ast) {
+			if (ast->postfixes()) {
+				Array<PostfixAST*> *postfixes = ast->postfixes();
+				for (uint i = 0; i < postfixes->size(); i++) {
+					postfixes->at(i)->accept(this);
+				}
+			}
+		}
+		void visit(PostfixAST *ast) {
 
 		}
-
+		void visit(IndexPostfixAST *ast) {
+			m_os << "[ ";
+			ast->indexExpr()->accept(this);
+			m_os << " ]";
+		}
+		void visit(MemberPostfixAST *ast) {
+			m_os << ".";
+			m_os << ast->memberName();
+		}
+		void visit(CallFuncPostfixAST *ast) {
+			m_os << "( ";
+			for (uint i = 0; i < ast->params()->size(); i++) {
+				if (i)
+					m_os << ", ";
+				m_os << ast->params()->at(i)->name(); 
+				if (ast->params()->at(i)->value()) {
+					m_os << " = ";
+					ast->params()->at(i)->value()->accept(this);
+				}
+			}
+			m_os << " )";
+		}
 		void visit(ExprStmtAST *ast) {
 			printTab();
 			ast->expr()->accept(this);

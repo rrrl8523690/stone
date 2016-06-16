@@ -24,7 +24,7 @@ namespace stone {
 		bool expect(const String<char_type> &string_) {
 			Token *token;
 			if ((token = read())->string() != string_) {
-				std::cerr << "Lexer error at line " << token->lineNumber() << ": expected " << string_ << ", received " << token->string() << std::endl;
+				//std::cerr << "Lexer error at line " << token->lineNumber() << ": expected " << "'" << string_ << "'" << ", received " << "'" << token->string() << "'" << std::endl;
 				return false;
 			}
 			return true;

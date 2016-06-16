@@ -137,11 +137,18 @@ namespace stone {
 
 	class ExprAST : public AST {
 	public:
-		ExprAST(Array<PostfixAST*> *postfixes_ = nullptr) {
-			m_postfixes = postfixes_;
+		ExprAST() {
+			m_postfixes = nullptr;
+		}
+		~ExprAST() {
 		}
 		void accept(ASTVisitor *visitor);
-		const Array<PostfixAST*> *postfixes() const {
+		void appendPostfix(PostfixAST *postfixAST) {
+			if (!m_postfixes)
+				m_postfixes = new Array<PostfixAST*>();
+			m_postfixes->append(postfixAST);
+		}
+		Array<PostfixAST*> *postfixes() const {
 			return m_postfixes;
 		}
 	private:
@@ -165,6 +172,9 @@ namespace stone {
 
 	class IndexPostfixAST : public PostfixAST {
 	public:
+		IndexPostfixAST(ExprAST *indexExpr_) {
+			m_indexExpr = indexExpr_;
+		}
 		void accept(ASTVisitor *);
 		ExprAST *indexExpr() const {
 			return m_indexExpr;
@@ -175,8 +185,8 @@ namespace stone {
 
 	class MemberPostfixAST : public PostfixAST {
 	public:
-		MemberPostfixAST() {
-
+		MemberPostfixAST(const String<char_type> &memberName_) {
+			m_memberName = memberName_;
 		}
 		void accept(ASTVisitor *visitor);
 		const String<char_type> &memberName() const {
@@ -192,7 +202,7 @@ namespace stone {
 			m_params = params_;
 		}
 		void accept(ASTVisitor *visitor);
-		const Array<ParamValuePair*> *params() const {
+		Array<ParamValuePair*> *params() const {
 			return m_params;
 		}
 	private:
@@ -289,6 +299,10 @@ namespace stone {
 		virtual void visit(WhileStmtAST *) = 0;
 		virtual void visit(BlockAST *) = 0;
 		virtual void visit(DefFuncStmtAST *) = 0;
+		virtual void visit(PostfixAST *) = 0;
+		virtual void visit(IndexPostfixAST *) = 0;
+		virtual void visit(MemberPostfixAST *) = 0;
+		virtual void visit(CallFuncPostfixAST *) = 0;
 		virtual void visit(ExprAST *) = 0;
 		virtual void visit(ExprStmtAST *) = 0;
 		virtual void visit(BinaryOpAST *) = 0;
@@ -318,6 +332,18 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void ExprAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void PostfixAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void IndexPostfixAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void MemberPostfixAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void CallFuncPostfixAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void ExprStmtAST::accept(ASTVisitor *visitor) {
