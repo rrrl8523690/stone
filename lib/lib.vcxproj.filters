@@ -90,6 +90,15 @@
     <ClInclude Include="Data.hpp">
       <Filter>头文件\stone</Filter>
     </ClInclude>
+    <ClInclude Include="Env.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>头文件\ds</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeMapImpl.hpp">
+      <Filter>头文件\ds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

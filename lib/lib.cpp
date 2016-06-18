@@ -14,6 +14,7 @@
 #include "Parser.hpp"
 #include "Visitor.hpp"
 #include "ASTPrinter.hpp"
+#include "Data.hpp"
 
 
 void dsUnitTest() {
@@ -79,6 +80,7 @@ void stoneParserTest() {
 
 }
 int main() {
+	using namespace std;
 	stoneTest();
 	//stoneParserTest();
 	//visitorTest();
