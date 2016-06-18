@@ -52,16 +52,15 @@ namespace ds {
 			return ptr;
 		}
 		inline void rotate(NodePtr &t, bool d) {
-			using std::shared_ptr;
-			shared_ptr<SBTNode> p = t->child[!d];
+			NodePtr p = t->child[!d];
 			t->child[!d] = p->child[d];
 			p->child[d] = t;
 			p->size = t->size;
 			t->size = t->child[0]->size + t->child[1]->size + 1;
 			t = p;
 		}
-		void maintain(SBTNode::NodePtr &t, bool d) {
-			if (!t)
+		void maintain(NodePtr &t, bool d) {
+			if (t == nul)
 				return;
 			if (t->child[d]->child[d]->size > t->child[!d]->size)
 				rotate(t, !d);
@@ -75,14 +74,17 @@ namespace ds {
 			maintain(t, 0);
 			maintain(t, 1);
 		}
-		void insert(SBTNode::NodePtr &t, const KeyType &key, const ValueType &value) {
+		void insert(NodePtr &t, const KeyType &key, const ValueType &value) {
 			if (t == nul) {
-				t = n
+				t = newNode();
+				t->key = new KeyType(key);
+				t->value = new ValueType(value);
+			} else {
+				t->size++;
+				insert(t->c[!(key < (*(t->key)))], key, value);
+				maintain(t, !(key < (*(t->key))));
 			}
 		}
-		SBTNode::NodePtr del(std::shared_ptr<SBTNode> &t, const KeyType &key) {
-
-		}
-		std::shared_ptr<SBTNode> m_root;
+		NodePtr m_root;
 	};
 }
