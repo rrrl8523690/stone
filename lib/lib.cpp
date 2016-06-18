@@ -10,6 +10,7 @@
 #include "Message.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
+#include "MapUnitTest.hpp"
 #include "Lexer.hpp"
 #include "Parser.hpp"
 #include "Visitor.hpp"
@@ -81,7 +82,8 @@ void stoneParserTest() {
 }
 int main() {
 	using namespace std;
-	stoneTest();
+	MapUnitTest::run();
+	//stoneTest();
 	//stoneParserTest();
 	//visitorTest();
 	//stoneLexerTest();

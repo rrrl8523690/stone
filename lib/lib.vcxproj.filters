@@ -99,6 +99,9 @@
     <ClInclude Include="TreeMapImpl.hpp">
       <Filter>头文件\ds</Filter>
     </ClInclude>
+    <ClInclude Include="MapUnitTest.hpp">
+      <Filter>头文件\ds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

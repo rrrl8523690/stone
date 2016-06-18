@@ -6,15 +6,22 @@
 
 namespace ds {
 	template<class KeyType, class ValueType>
-	class TreeMapImpl {
+	class TreeMapImpl : public MapImpl<KeyType, ValueType> {
 	public:
 		TreeMapImpl() {
-			m_root = SBTNode::nul();
+			m_root = nul();
 		}
 		~TreeMapImpl() {
 		}
 		void insert(const KeyType &key, const ValueType &value) {
-
+			insert(m_root, key, value);
+		}
+		ValueType &find(const KeyType &key) {
+			SBTNode::NodePtr nodePtr = find(m_root, key);
+			if (nodePtr == nul()) {
+				nodePtr = insert(m_root, key, ValueType());
+			}
+			return nodePtr->value();
 		}
 	private:
 		class SBTNode {
@@ -22,33 +29,39 @@ namespace ds {
 			typedef std::shared_ptr<SBTNode> NodePtr;
 			SBTNode() {
 				child[0] = child[1] = nullptr;
-				key = nullptr;
-				value = nullptr;
-				size = 0;
+				keyPtr = nullptr;
+				valuePtr = nullptr;
+				size = 1;
 			}
-			~TreeMapImpl() {
-				delete key;
-				delete value;
+			~SBTNode() {
+				delete keyPtr;
+				delete valuePtr;
+			}
+			KeyType &key() {
+				return *keyPtr;
+			}
+			ValueType &value() {
+				return *valuePtr;
 			}
 
 			NodePtr child[2];
-			KeyType *key;
-			ValueType *value;
+			KeyType *keyPtr;
+			ValueType *valuePtr;
 			uint size;
 		};
-		typedef SBTNode::NodePtr NodePtr;
+		typedef typename SBTNode::NodePtr NodePtr;
 		NodePtr nul() {
 			static NodePtr nul_;
 			if (!nul_) {
-				nul_ = new SBTNode();
+				nul_ = NodePtr(new SBTNode());
 				nul_->child[0] = nul_->child[1] = nul_;
 				nul_->size = 0;
 			}
 			return nul_;
 		}
 		NodePtr newNode() {
-			NodePtr ptr = new SBTNode();
-			ptr->child[0] = ptr->child[1] = SBTNode::nul();
+			NodePtr ptr(new SBTNode());
+			ptr->child[0] = ptr->child[1] = nul();
 			return ptr;
 		}
 		inline void rotate(NodePtr &t, bool d) {
@@ -60,7 +73,7 @@ namespace ds {
 			t = p;
 		}
 		void maintain(NodePtr &t, bool d) {
-			if (t == nul)
+			if (t == nul())
 				return;
 			if (t->child[d]->child[d]->size > t->child[!d]->size)
 				rotate(t, !d);
@@ -74,15 +87,27 @@ namespace ds {
 			maintain(t, 0);
 			maintain(t, 1);
 		}
-		void insert(NodePtr &t, const KeyType &key, const ValueType &value) {
-			if (t == nul) {
+		NodePtr insert(NodePtr &t, const KeyType &key, const ValueType &value) {
+			if (t == nul()) {
 				t = newNode();
-				t->key = new KeyType(key);
-				t->value = new ValueType(value);
+				t->keyPtr = new KeyType(key);
+				t->valuePtr = new ValueType(value);
+				return t;
 			} else {
 				t->size++;
-				insert(t->c[!(key < (*(t->key)))], key, value);
-				maintain(t, !(key < (*(t->key))));
+				NodePtr res = insert(t->child[!(key < t->key())], key, value);
+				maintain(t, !(key < t->key()));
+				return res;
+			}
+		}
+		NodePtr find(NodePtr root, const KeyType &key) {
+			NodePtr now = root;
+			while (true) {
+				if (now == nul())
+					return now;
+				if (now->key() == key) 
+					return now;
+				now = now->child[key >= now->key()];
 			}
 		}
 		NodePtr m_root;
