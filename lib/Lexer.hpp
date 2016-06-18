@@ -83,7 +83,7 @@ namespace stone {
 			return isInStringSet(string, keywordSet);
 		}
 		bool fillAToken(Reader<char_type> *reader) {
-			char_type ch;
+			char_type ch = ' ';
 			m_kth++;
 			while (!reader->isEnd()) {
 				ch = reader->read();
