@@ -3,7 +3,6 @@
 #include "String.hpp"
 namespace stone {
 	using namespace ds;
-	typedef char char_type;
 
 	class CodePosition {
 	public:

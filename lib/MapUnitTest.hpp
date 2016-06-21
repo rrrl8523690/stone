@@ -27,10 +27,15 @@ namespace ds {
 				for (uint i = 0; i < order.size(); i++) {
 					map[order[i]] = order[i];
 				}
+				bool ok = true;
 				for (int i = 1; i <= n; i++) {
 					if (map[i] != i) {
+						ok = false;
 						std::cerr << i << " " << map[i] << std::endl;
 					}
+				}
+				if (ok) {
+					std::cerr << "DONE, Nothing wrong" << std::endl;
 				}
 			}
 		}

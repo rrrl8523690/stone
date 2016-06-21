@@ -14,3 +14,7 @@ enum ConsoleColor {
 inline void setConsoleColor(const ConsoleColor& colorId) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorId);
 }
+
+namespace stone {
+	typedef char char_type;
+}

@@ -86,7 +86,7 @@ namespace stone {
 
 	class ParamValuePair : public AST {
 	public:
-		ParamValuePair(String<char_type> name_, ExprAST *value_) {
+		ParamValuePair(const String<char_type> &name_, ExprAST *value_) {
 			m_name = name_;
 			m_value = value_;
 		}

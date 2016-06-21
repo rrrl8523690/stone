@@ -10,14 +10,15 @@ public:
 		DOUBLE,
 		ARRAY,
 		OBJ,
-		FUNC
+		FUNC,
+		ENV
 	};
-	inline virtual DataType type() = 0;
+	inline virtual DataType type() const = 0;
 };
 
 class IntData : public Data {
 public:
-	DataType type() {
+	DataType type() const {
 		return INT;
 	}
 	int &value() {
@@ -29,7 +30,7 @@ private:
 
 class DoubleData : public Data {
 public:
-	DataType type() {
+	DataType type() const {
 		return DOUBLE;
 	}
 	double &value() {
@@ -41,21 +42,21 @@ private:
 
 class ArrayData : public Data {
 public:
-	DataType type() {
+	DataType type() const {
 		return ARRAY;
 	}
 };
 
 class ObjData : public Data {
 public:
-	DataType type() {
+	DataType type() const {
 		return OBJ;
 	}
 };
 
 class FuncData : public Data {
 public:
-	DataType type() {
+	DataType type() const {
 		return FUNC;
 	}
 };

@@ -16,12 +16,28 @@ namespace ds {
 		void insert(const KeyType &key, const ValueType &value) {
 			insert(m_root, key, value);
 		}
-		ValueType &find(const KeyType &key) {
+		const ValueType *get(const KeyType &key) {
+			SBTNode::NodePtr nodePtr = find(m_root, key);
+			if (nodePtr == nul())
+				return nullptr;
+			return &nodePtr->value();
+		}
+		ValueType &getRef(const KeyType &key) {
 			SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul()) {
 				nodePtr = insert(m_root, key, ValueType());
 			}
 			return nodePtr->value();
+		}
+		void put(const KeyType &key, const ValueType &value) {
+			SBTNode::NodePtr nodePtr = find(m_root, key);
+			if (nodePtr == nul()) {
+				nodePtr = insert(m_root, key, ValueType());
+			}
+			nodePtr->value() = value;
+		}
+		bool contains(const KeyType &key) {
+			return find(m_root, key) != nul();
 		}
 	private:
 		class SBTNode {
@@ -105,7 +121,7 @@ namespace ds {
 			while (true) {
 				if (now == nul())
 					return now;
-				if (now->key() == key) 
+				if (now->key() == key)
 					return now;
 				now = now->child[key >= now->key()];
 			}
