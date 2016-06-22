@@ -65,12 +65,14 @@ namespace stone {
 
 	class MsgHandler {
 	public:
+		virtual	~MsgHandler() {
+		}
 		virtual void receive(Message *) = 0;
 
 	private:
 	};
 
-	class MsgPrinter : public MsgHandler {
+	class MsgPrinter : virtual public MsgHandler {
 	public:
 		MsgPrinter(std::ostream &os) : m_os(os) {
 		}

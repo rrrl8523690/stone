@@ -18,6 +18,9 @@ public:
 
 class IntData : public Data {
 public:
+	IntData(int value_) {
+		m_value = value_;
+	}
 	DataType type() const {
 		return INT;
 	}

@@ -10,6 +10,8 @@
 #include "Message.hpp"
 #include "ArrayUnitTest.hpp"
 #include "StringUnitTest.hpp"
+#include "Interpreter.hpp"
+#include "MapEnv.hpp"
 #include "MapUnitTest.hpp"
 #include "Lexer.hpp"
 #include "Parser.hpp"
@@ -47,6 +49,8 @@ void stoneTest() {
 		//}
 		lastLineNumber = token->lineNumber();
 	}
+
+	// parse
 	cerr << endl << endl;
 	lexer = new Lexer(&code);
 	MsgHandler *msgHandler = new MsgPrinter(std::cerr);
@@ -57,6 +61,11 @@ void stoneTest() {
 	if (!ast)cerr << "null ast" << endl;
 	ast->accept(visitor);
 	cerr << endl;
+
+	// interpret
+	//shared_ptr<Env> env(new MapEnv(nullptr, nullptr));
+	Interpreter *interpreter = new Interpreter();
+	ast->accept(interpreter);
 }
 
 void visitorTest() {
@@ -78,12 +87,11 @@ void stoneParserTest() {
 	std::cerr << code << std::endl;
 	std::cerr << std::endl;
 	Lexer *lexer = new Lexer(&code);
-
 }
 int main() {
 	using namespace std;
-	MapUnitTest::run();
-	//stoneTest();
+	//MapUnitTest::run();
+	stoneTest();
 	//stoneParserTest();
 	//visitorTest();
 	//stoneLexerTest();

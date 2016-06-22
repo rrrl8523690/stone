@@ -118,6 +118,22 @@ namespace stone {
 		OpType type() const {
 			return m_opType;
 		}
+		int calculate(int a, int b) {
+			switch (m_opType) {
+			case ADD:
+				return a + b;
+			case SUB:
+				return a - b;
+			case MUL:
+				return a * b;
+			case DIV:
+				return a / b;
+			case EQUAL:
+				return a == b;
+			default:
+				std::cerr << "No such operator!" << std::endl;
+			}
+		}
 	private:
 		void init(uint precedence_, Associativity associativity_, uint operandNum_, OpType opType_) {
 			m_precedence = precedence_;

@@ -6,7 +6,7 @@
 
 namespace ds {
 	template<class KeyType, class ValueType>
-	class TreeMapImpl : public MapImpl<KeyType, ValueType> {
+	class TreeMapImpl : virtual public MapImpl<KeyType, ValueType> {
 	public:
 		using ValuePtr = std::shared_ptr<ValueType>;
 		TreeMapImpl() {

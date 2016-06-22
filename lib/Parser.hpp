@@ -20,7 +20,7 @@ namespace stone {
 			delete m_msgHandler;
 		}
 		AST *parse() {
-			AST *result = parseStmt();
+			AST *result = parseBlockWithoutBraces();
 			if (!m_lexer->isEnd()) { // TODO: error!
 				std::cerr << "not end!" << std::endl;
 			}
@@ -76,7 +76,6 @@ namespace stone {
 
 		BlockAST *parseBlockWithBraces() {
 			BlockAST *result = new BlockAST();
-			//cerr << m_lexer->peek(0)->string() << m_lexer->peek(1)->string() << endl;
 			expect("{");
 			while (!m_lexer->isEnd()) {
 				Token *token = m_lexer->peek(0);
@@ -85,6 +84,15 @@ namespace stone {
 					return result;
 				} else { // TODO: error
 				}
+				result->append(parseStmt());
+			}
+			return result;
+		}
+
+		BlockAST *parseBlockWithoutBraces() {
+			BlockAST *result = new BlockAST();
+			while (!m_lexer->isEnd()) {
+				//cerr << m_lexer->peek(0)->string();
 				result->append(parseStmt());
 			}
 			return result;
@@ -144,6 +152,13 @@ namespace stone {
 			return new DefFuncStmtAST(funcName, params, funcBody);
 		}
 
+		PrintStmtAST *parsePrintStmt() {
+			expect("print");
+			ExprAST *expr = parseExpr(0);
+			expect(";");
+			return new PrintStmtAST(expr);
+		}
+
 		StmtAST *parseStmt() {
 			Token *firstToken = m_lexer->peek(0);
 			StmtAST *result = nullptr;
@@ -154,7 +169,9 @@ namespace stone {
 					result = parseWhileStmt();
 				} else if (firstToken->string() == "def") {
 					result = parseDefFuncStmt();
-				}
+				} else if (firstToken->string() == "print") {
+					result = parsePrintStmt();
+				} 
 			} else if (firstToken->type() == Token::SYM) {
 				if (firstToken->string() == "{") {
 					result = parseBlockWithBraces();

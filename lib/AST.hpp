@@ -170,6 +170,21 @@ namespace stone {
 		ExprAST *m_expr;
 	};
 
+	class PrintStmtAST : public StmtAST {
+	public:
+		PrintStmtAST(ExprAST *expr_) {
+			m_expr = expr_;
+		}
+		virtual	~PrintStmtAST() {
+		}
+		ExprAST *expr() {
+			return m_expr;
+		}
+		void accept(ASTVisitor *visitor);
+	private:
+		ExprAST *m_expr;
+	};
+
 	class IndexPostfixAST : public PostfixAST {
 	public:
 		IndexPostfixAST(ExprAST *indexExpr_) {
@@ -291,6 +306,8 @@ namespace stone {
 	};
 
 
+
+
 	class ASTVisitor {
 	public:
 		virtual void visit(AST *) = 0;
@@ -305,6 +322,7 @@ namespace stone {
 		virtual void visit(CallFuncPostfixAST *) = 0;
 		virtual void visit(ExprAST *) = 0;
 		virtual void visit(ExprStmtAST *) = 0;
+		virtual void visit(PrintStmtAST *) = 0;
 		virtual void visit(BinaryOpAST *) = 0;
 		virtual void visit(IntLiteralAST *) = 0;
 		virtual void visit(UnaryOpAST *) = 0;
@@ -347,6 +365,9 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void ExprStmtAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void PrintStmtAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void BinaryOpAST::accept(ASTVisitor *visitor) {

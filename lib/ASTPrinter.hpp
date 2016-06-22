@@ -135,6 +135,12 @@ namespace stone {
 			ast->expr()->accept(this);
 			m_os << ";" << endl;
 		}
+		void visit(PrintStmtAST *ast) {
+			printTab();
+			m_os << "print ";
+			ast->expr()->accept(this);
+			m_os << ";" << endl;
+		}
 		void visit(BinaryOpAST *ast) {
 			m_os << "(";
 			ast->left()->accept(this);

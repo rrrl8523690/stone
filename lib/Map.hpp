@@ -3,12 +3,11 @@
 #include <memory>
 
 namespace ds {
-
 	template<class KeyType, class ValueType>
 	class MapImpl {
 	public:
 		using It = std::shared_ptr<ValueType>;
-		~MapImpl() {
+		virtual ~MapImpl() {
 		}
 		//virtual void insert(const KeyType &key, const ValueType &value) = 0;
 		virtual It get(const KeyType &key) = 0;
@@ -18,7 +17,6 @@ namespace ds {
 
 	template<class KeyType, class ValueType>
 	class TreeMapImpl;
-
 
 	template<class KeyType, class ValueType, class MapImpl = TreeMapImpl<KeyType, ValueType> >
 	class Map {

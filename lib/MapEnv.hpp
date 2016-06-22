@@ -9,7 +9,6 @@ namespace stone {
 	class MapEnv : public virtual Env {
 	public:
 		using MapEnvPtr = std::shared_ptr<MapEnv>;
-		using MapIt = ds::Map<ds::String<char_type>, std::shared_ptr<Data> >::It;
 		MapEnv(MapEnvPtr outer_, MapEnvPtr parent_)
 			: m_map(new ds::Map<ds::String<char_type>, std::shared_ptr<Data> >()) {
 			m_outer = outer_;

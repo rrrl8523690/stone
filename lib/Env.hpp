@@ -3,16 +3,19 @@
 #include "Data.hpp"
 #include "String.hpp"
 #include "common.h"
+#include "Map.hpp"
+#include <memory>
 
 namespace stone {
 	class Env : public Data {
 	public:
-		~Env() {
+		using MapIt = ds::Map<ds::String<char_type>, std::shared_ptr<Data> >::It;
+		virtual ~Env() {
 		}
 		DataType type() const {
 			return ENV;
 		}
-		//virtual void put(const ds::String<char_type> &name, Data *data) = 0;
-		//virtual Data *&get(const ds::String<char_type> &name) = 0;
+		virtual MapIt get(const ds::String<char_type> &name) = 0;
+		virtual MapIt getOrCreate(const ds::String<char_type> &name) = 0;
 	};
 }
