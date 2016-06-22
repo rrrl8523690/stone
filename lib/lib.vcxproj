@@ -157,6 +157,7 @@
     <ClInclude Include="ASTPrinter.hpp" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Env.hpp" />
+    <ClInclude Include="Interpreter.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapEnv.hpp" />
     <ClInclude Include="MapUnitTest.hpp" />

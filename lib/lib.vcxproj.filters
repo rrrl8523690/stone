@@ -105,6 +105,9 @@
     <ClInclude Include="MapEnv.hpp">
       <Filter>头文件\stone</Filter>
     </ClInclude>
+    <ClInclude Include="Interpreter.hpp">
+      <Filter>头文件\stone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

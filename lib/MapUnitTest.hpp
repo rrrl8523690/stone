@@ -35,7 +35,7 @@ namespace ds {
 					}
 				}
 				if (ok) {
-					std::cerr << "DONE, Nothing wrong" << std::endl;
+					std::cerr << "Done. Nothing wrong" << std::endl;
 				}
 			}
 		}

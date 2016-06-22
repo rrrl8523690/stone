@@ -1,15 +1,18 @@
 #pragma once
 
+#include <memory>
+
 namespace ds {
 
 	template<class KeyType, class ValueType>
 	class MapImpl {
 	public:
+		using It = std::shared_ptr<ValueType>;
 		~MapImpl() {
 		}
 		//virtual void insert(const KeyType &key, const ValueType &value) = 0;
-		virtual const ValueType *get(const KeyType &key) = 0;
-		virtual ValueType &getRef(const KeyType &key) = 0;
+		virtual It get(const KeyType &key) = 0;
+		virtual It getOrCreate(const KeyType &key) = 0;
 		virtual void put(const KeyType &key, const ValueType &value) = 0;
 	};
 
@@ -20,6 +23,7 @@ namespace ds {
 	template<class KeyType, class ValueType, class MapImpl = TreeMapImpl<KeyType, ValueType> >
 	class Map {
 	public:
+		using It = std::shared_ptr<ValueType>;
 		Map() {
 			m_mapImpl = new MapImpl();
 		}
@@ -27,13 +31,13 @@ namespace ds {
 			delete m_mapImpl;
 		}
 		ValueType &operator[](const KeyType &key) {
-			return m_mapImpl->getRef(key);
+			return *m_mapImpl->getOrCreate(key);
 		}
-		const ValueType *get(const KeyType &key) {
+		It get(const KeyType &key) {
 			return m_mapImpl->get(key);
 		}
-		ValueType &getRef(const KeyType &key) {
-			return m_mapImpl->getRef(key);
+		It getOrCreate(const KeyType &key) {
+			return m_mapImpl->getOrCreate(key);
 		}
 		void put(const KeyType &key, const ValueType &value) {
 			m_mapImpl->put(key, value);

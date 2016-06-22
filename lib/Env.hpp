@@ -12,7 +12,7 @@ namespace stone {
 		DataType type() const {
 			return ENV;
 		}
-		virtual void put(const ds::String<char_type> &name, Data *data) = 0;
-		virtual Data *&get(const ds::String<char_type> &name) = 0;
+		//virtual void put(const ds::String<char_type> &name, Data *data) = 0;
+		//virtual Data *&get(const ds::String<char_type> &name) = 0;
 	};
 }

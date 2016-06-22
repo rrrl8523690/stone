@@ -8,6 +8,7 @@ namespace ds {
 	template<class KeyType, class ValueType>
 	class TreeMapImpl : public MapImpl<KeyType, ValueType> {
 	public:
+		using ValuePtr = std::shared_ptr<ValueType>;
 		TreeMapImpl() {
 			m_root = nul();
 		}
@@ -16,18 +17,18 @@ namespace ds {
 		void insert(const KeyType &key, const ValueType &value) {
 			insert(m_root, key, value);
 		}
-		const ValueType *get(const KeyType &key) {
+		ValuePtr get(const KeyType &key) {
 			SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul())
 				return nullptr;
-			return &nodePtr->value();
+			return nodePtr->valuePtr;
 		}
-		ValueType &getRef(const KeyType &key) {
+		ValuePtr getOrCreate(const KeyType &key) {
 			SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul()) {
 				nodePtr = insert(m_root, key, ValueType());
 			}
-			return nodePtr->value();
+			return nodePtr->valuePtr;
 		}
 		void put(const KeyType &key, const ValueType &value) {
 			SBTNode::NodePtr nodePtr = find(m_root, key);
@@ -43,15 +44,13 @@ namespace ds {
 		class SBTNode {
 		public:
 			typedef std::shared_ptr<SBTNode> NodePtr;
-			SBTNode() {
+			SBTNode() : valuePtr(nullptr) {
 				child[0] = child[1] = nullptr;
 				keyPtr = nullptr;
-				valuePtr = nullptr;
 				size = 1;
 			}
 			~SBTNode() {
 				delete keyPtr;
-				delete valuePtr;
 			}
 			KeyType &key() {
 				return *keyPtr;
@@ -62,7 +61,7 @@ namespace ds {
 
 			NodePtr child[2];
 			KeyType *keyPtr;
-			ValueType *valuePtr;
+			ValuePtr valuePtr;
 			uint size;
 		};
 		typedef typename SBTNode::NodePtr NodePtr;
@@ -107,7 +106,7 @@ namespace ds {
 			if (t == nul()) {
 				t = newNode();
 				t->keyPtr = new KeyType(key);
-				t->valuePtr = new ValueType(value);
+				t->valuePtr = ValuePtr(new ValueType(value));
 				return t;
 			} else {
 				t->size++;
