@@ -5,4 +5,5 @@ c = 55;
 print a = ((a + c) / 2 - b) * 10 + a * c;
 print b;
 print b + 2;
-print c;
+print 1 != 1 && (a = 2);
+print a;

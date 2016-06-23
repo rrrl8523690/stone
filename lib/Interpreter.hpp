@@ -60,8 +60,8 @@ namespace stone {
 		void visit(PrintStmtAST *ast) {
 			ast->expr()->accept(this);
 			if (m_returnedData->get()->type() == Data::INT) {
-				std::cout << "STONE OUTPUT: " 
-					<< static_cast<IntData*>(m_returnedData->get())->value() 
+				std::cout << "STONE OUTPUT: "
+					<< static_cast<IntData*>(m_returnedData->get())->value()
 					<< std::endl;
 			} else {
 				error("Cannot print, type error");
@@ -74,17 +74,41 @@ namespace stone {
 			ast->left()->accept(this);
 			lhs = m_returnedData;
 
+			// short circuit calculation 
+			Operator::OpType opType = ast->op()->type();
+			if (opType == Operator::ANDALSO || opType == Operator::ORELSE) {
+				switch (opType) {
+				case Operator::ANDALSO:
+					if (!toInt(m_returnedData)) {
+						m_returnedData = toDataPtr(new IntData(false));
+						return;
+					}
+					goto dft;
+				case Operator::ORELSE:
+					if (toInt(m_returnedData)) {
+						m_returnedData = toDataPtr(new IntData(true));
+						return;
+					}
+				default:
+					dft:
+					m_mayCreate = false;
+					ast->right()->accept(this);
+					m_returnedData = toDataPtr(new IntData(!!toInt(m_returnedData)));
+					return;
+				}
+			}
+
 			m_mayCreate = false;
 			ast->right()->accept(this);
 			rhs = m_returnedData;
 
-			switch (ast->op()->type()) {
+			switch (opType) {
 			case Operator::ASSIGN:
 				*lhs = *rhs;
 				m_returnedData = lhs;
 				break;
 			case Operator::ADD: case Operator::SUB: case Operator::MUL:
-			case Operator::DIV: case Operator::EQUAL:
+			case Operator::DIV: case Operator::EQUAL: case Operator::NOTEQUAL:
 				if ((*lhs)->type() == Data::INT && (*rhs)->type() == Data::INT) {
 					int left = static_cast<IntData*>(lhs->get())->value();
 					int right = static_cast<IntData*>(rhs->get())->value();
@@ -134,6 +158,9 @@ namespace stone {
 			std::shared_ptr<Data> tmp(data);
 			DataPtr res(new std::shared_ptr<Data>(tmp));
 			return res;
+		}
+		static int toInt(const DataPtr &ptr) {
+			return static_cast<IntData*>(ptr->get())->value();
 		}
 		MapEnvPtr m_env;
 		bool m_mayCreate;

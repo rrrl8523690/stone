@@ -130,9 +130,12 @@ namespace stone {
 				return a / b;
 			case EQUAL:
 				return a == b;
+			case NOTEQUAL:
+				return a != b;
 			default:
 				std::cerr << "No such operator!" << std::endl;
 			}
+			return 0;
 		}
 	private:
 		void init(uint precedence_, Associativity associativity_, uint operandNum_, OpType opType_) {
@@ -160,7 +163,7 @@ namespace stone {
 	extern Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
 	extern Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
 
-	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &addOp, &subOp, &mulOp, &divOp , &positiveOp, &negativeOp };
+	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &notEqualOp, &addOp, &subOp, &mulOp, &divOp , &positiveOp, &negativeOp };
 
 	class OpToken : public Token {
 	public:
