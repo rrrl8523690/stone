@@ -28,6 +28,18 @@ namespace stone {
 		void visit(StmtAST *ast) {
 		}
 		void visit(IfStmtAST *ast) {
+			ast->condition()->accept(this);
+			switch (m_returnedData->get()->type()) { // Only supports integers now
+			case Data::INT:
+				if (toInt(m_returnedData)) {
+					ast->trueStmt()->accept(this);
+				} else if (ast->elseStmt()) {
+					ast->elseStmt()->accept(this);
+				}
+				break;
+			default:
+				break;
+			}
 		}
 		void visit(WhileStmtAST *ast) {
 		}
@@ -91,10 +103,10 @@ namespace stone {
 					}
 				default:
 					dft:
-					m_mayCreate = false;
-					ast->right()->accept(this);
-					m_returnedData = toDataPtr(new IntData(!!toInt(m_returnedData)));
-					return;
+						m_mayCreate = false;
+						ast->right()->accept(this);
+						m_returnedData = toDataPtr(new IntData(!!toInt(m_returnedData)));
+						return;
 				}
 			}
 
