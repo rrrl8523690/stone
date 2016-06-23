@@ -66,6 +66,32 @@ namespace stone {
 		StmtAST *m_trueStmt;
 	};
 
+	class ForStmtAST : public StmtAST {
+	public:
+		ForStmtAST(ExprAST *init_, ExprAST *condition_, ExprAST *step_, StmtAST *body_) {
+			m_init = init_;
+			m_condition = condition_;
+			m_step = step_;
+			m_body = body_;
+		}
+		ExprAST *init() const {
+			return m_init;
+		}
+		ExprAST *condition() const {
+			return m_condition;
+		}
+		ExprAST *step() const {
+			return m_step;
+		}
+		StmtAST *body() const {
+			return m_body;
+		}
+		void accept(ASTVisitor *);
+	private:
+		ExprAST *m_init, *m_condition, *m_step;
+		StmtAST *m_body;
+	};
+
 	class BlockAST : public StmtAST {
 	public:
 		BlockAST() {
@@ -309,15 +335,13 @@ namespace stone {
 		ds::String<char_type> m_varName;
 	};
 
-
-
-
 	class ASTVisitor {
 	public:
 		virtual void visit(AST *) = 0;
 		virtual void visit(StmtAST *) = 0;
 		virtual void visit(IfStmtAST *) = 0;
 		virtual void visit(WhileStmtAST *) = 0;
+		virtual void visit(ForStmtAST *) = 0;
 		virtual void visit(BlockAST *) = 0;
 		virtual void visit(DefFuncStmtAST *) = 0;
 		virtual void visit(PostfixAST *) = 0;
@@ -345,6 +369,9 @@ namespace stone {
 		visitor->visit(this);
 	}
 	void WhileStmtAST::accept(ASTVisitor *visitor) {
+		visitor->visit(this);
+	}
+	void ForStmtAST::accept(ASTVisitor *visitor) {
 		visitor->visit(this);
 	}
 	void BlockAST::accept(ASTVisitor *visitor) {

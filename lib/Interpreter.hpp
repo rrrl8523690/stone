@@ -36,11 +36,19 @@ namespace stone {
 			}
 		}
 		void visit(WhileStmtAST *ast) { // currently only supports integer conditions 
-			while (true) {
-				ast->condition()->accept(this);
-				if (!isTrue(m_returnedData))
-					break;
+			while (ast->condition()->accept(this), isTrue(m_returnedData)) {
 				ast->trueStmt()->accept(this);
+			}
+		}
+		void visit(ForStmtAST *ast) {
+			if (ast->init())
+				ast->init()->accept(this);
+			while (true) {
+				if (ast->condition() && (ast->condition()->accept(this), !isTrue(m_returnedData)))
+					return;
+				ast->body()->accept(this);
+				if (ast->step())
+					ast->step()->accept(this);
 			}
 		}
 		void visit(BlockAST *ast) {

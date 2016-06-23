@@ -74,6 +74,26 @@ namespace stone {
 			return result;
 		}
 
+		ForStmtAST *parseForStmt() {
+			expect("for");
+			expect("(");
+			ExprAST *init = nullptr, *condition = nullptr, *step = nullptr;
+			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ";") {
+				init = parseExpr(0);
+			}
+			expect(";");
+			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ";") {
+				condition = parseExpr(0);
+			}
+			expect(";");
+			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ")") {
+				step = parseExpr(0);
+			}
+			expect(")");
+			StmtAST *body = parseStmt();
+			return new ForStmtAST(init, condition, step, body);
+		}
+
 		BlockAST *parseBlockWithBraces() {
 			BlockAST *result = new BlockAST();
 			expect("{");
@@ -152,6 +172,8 @@ namespace stone {
 			return new DefFuncStmtAST(funcName, params, funcBody);
 		}
 
+
+
 		PrintStmtAST *parsePrintStmt() {
 			expect("print");
 			ExprAST *expr = parseExpr(0);
@@ -171,7 +193,9 @@ namespace stone {
 					result = parseDefFuncStmt();
 				} else if (firstToken->string() == "print") {
 					result = parsePrintStmt();
-				} 
+				} else if (firstToken->string() == "for") {
+					result = parseForStmt();
+				}
 			} else if (firstToken->type() == Token::SYM) {
 				if (firstToken->string() == "{") {
 					result = parseBlockWithBraces();

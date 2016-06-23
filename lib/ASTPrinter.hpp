@@ -77,6 +77,19 @@ namespace stone {
 			printTab();
 			m_os << "}" << endl;
 		}
+		void visit(ForStmtAST *ast) {
+			printTab();
+			m_os << "for ";
+			m_os << "(";
+			ast->init()->accept(this);
+			m_os << "; ";
+			ast->condition()->accept(this);
+			m_os << "; ";
+			ast->step()->accept(this);
+			m_os << ")" << endl;
+			printTab();
+			ast->body()->accept(this);
+		}
 		void visit(BlockAST *ast) {
 			printTab();
 			m_os << "{" << endl;
