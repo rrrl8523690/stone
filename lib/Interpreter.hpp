@@ -119,8 +119,7 @@ namespace stone {
 				*lhs = *rhs;
 				m_returnedData = lhs;
 				break;
-			case Operator::ADD: case Operator::SUB: case Operator::MUL:
-			case Operator::DIV: case Operator::EQUAL: case Operator::NOTEQUAL:
+			default:
 				if ((*lhs)->type() == Data::INT && (*rhs)->type() == Data::INT) {
 					int left = static_cast<IntData*>(lhs->get())->value();
 					int right = static_cast<IntData*>(rhs->get())->value();
@@ -128,9 +127,6 @@ namespace stone {
 				} else {
 					error("Type error when doing binary calculation.");
 				}
-				break;
-			default:
-				error("No such operator");
 				break;
 			}
 		}

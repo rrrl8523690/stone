@@ -55,7 +55,7 @@ namespace stone {
 			return isInCharSet(ch, blankCharSet);
 		}
 		bool isOp(char_type ch) {
-			static char_type opBeginCharSet[] = "|&^!+-*/=<>";
+			static char_type opBeginCharSet[] = "|&^!+-*/=<>%";
 			return isInCharSet(ch, opBeginCharSet);
 		}
 		bool isSymbol(char_type ch) {

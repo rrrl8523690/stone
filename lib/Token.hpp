@@ -94,7 +94,7 @@ namespace stone {
 		enum OpType {
 			ASSIGN,
 			ADD, SUB,
-			MUL, DIV,
+			MUL, DIV, MOD,
 			ORELSE, ANDALSO,
 			POSITIVE, NEGATIVE,
 			EQUAL, NOTEQUAL
@@ -128,6 +128,8 @@ namespace stone {
 				return a * b;
 			case DIV:
 				return a / b;
+			case MOD:
+				return a % b;
 			case EQUAL:
 				return a == b;
 			case NOTEQUAL:
@@ -160,10 +162,11 @@ namespace stone {
 	extern Operator subOp("-", 5, Operator::LEFT, 2, Operator::SUB);
 	extern Operator mulOp("*", 7, Operator::LEFT, 2, Operator::MUL);
 	extern Operator divOp("/", 7, Operator::LEFT, 2, Operator::DIV);
+	extern Operator modOp("%", 7, Operator::LEFT, 2, Operator::MOD);
 	extern Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
 	extern Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
 
-	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &notEqualOp, &addOp, &subOp, &mulOp, &divOp , &positiveOp, &negativeOp };
+	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &notEqualOp, &addOp, &subOp, &mulOp, &divOp, &modOp, &positiveOp, &negativeOp };
 
 	class OpToken : public Token {
 	public:
