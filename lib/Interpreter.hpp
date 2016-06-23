@@ -13,9 +13,9 @@
 namespace stone {
 	class Interpreter : virtual public ASTVisitor {
 	public:
-		using MapEnvPtr = std::shared_ptr<MapEnv>;
-		using DataPtr = ds::Map<String<char_type>, std::shared_ptr<Data> >::It;
-		Interpreter(MapEnvPtr env_ = nullptr)
+		using EnvPtr = std::shared_ptr<Env>;
+		using DataPtr = std::shared_ptr<std::shared_ptr<Data> >;
+		Interpreter(EnvPtr env_ = EnvPtr(new MapEnv(nullptr, nullptr)))
 			: m_env(env_), m_msgHandler(new MsgPrinter(std::cerr)) {
 			m_mayCreate = false;
 			m_returnedData = nullptr;
@@ -29,28 +29,23 @@ namespace stone {
 		}
 		void visit(IfStmtAST *ast) {
 			ast->condition()->accept(this);
-			switch (m_returnedData->get()->type()) { // Only supports integers now
-			case Data::INT:
-				if (toInt(m_returnedData)) {
-					ast->trueStmt()->accept(this);
-				} else if (ast->elseStmt()) {
-					ast->elseStmt()->accept(this);
-				}
-				break;
-			default:
-				break;
+			if (isTrue(m_returnedData)) {
+				ast->trueStmt()->accept(this);
+			} else {
+				ast->elseStmt()->accept(this);
 			}
 		}
-		void visit(WhileStmtAST *ast) {
+		void visit(WhileStmtAST *ast) { // currently only supports integer conditions 
+			while (true) {
+				ast->condition()->accept(this);
+				if (!isTrue(m_returnedData))
+					break;
+				ast->trueStmt()->accept(this);
+			}
 		}
 		void visit(BlockAST *ast) {
-			// TODO new scope
-			MapEnvPtr newEnv(new MapEnv(m_env, m_env));
-			MapEnvPtr lastEnv = m_env;
-			m_env = newEnv;
 			for (uint i = 0; i < ast->size(); i++)
 				ast->at(i)->accept(this);
-			m_env = lastEnv;
 		}
 		void visit(DefFuncStmtAST *ast) {
 		}
@@ -167,10 +162,19 @@ namespace stone {
 			DataPtr res(new std::shared_ptr<Data>(tmp));
 			return res;
 		}
+		bool isTrue(const DataPtr &ptr) {
+			switch (ptr->get()->type()) {
+			case Data::INT:
+				return toInt(ptr);
+			default:
+				error("condition error: type not supported");
+				return false;
+			}
+		}
 		static int toInt(const DataPtr &ptr) {
 			return static_cast<IntData*>(ptr->get())->value();
 		}
-		MapEnvPtr m_env;
+		EnvPtr m_env;
 		bool m_mayCreate;
 		DataPtr m_returnedData;
 		MsgHandler *m_msgHandler;

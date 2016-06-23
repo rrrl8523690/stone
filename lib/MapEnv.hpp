@@ -8,29 +8,28 @@
 namespace stone {
 	class MapEnv : public virtual Env {
 	public:
-		using MapEnvPtr = std::shared_ptr<MapEnv>;
-		MapEnv(MapEnvPtr outer_, MapEnvPtr parent_)
+		MapEnv(EnvPtr outer_, EnvPtr parent_)
 			: m_map(new ds::Map<ds::String<char_type>, std::shared_ptr<Data> >()) {
-			m_outer = outer_;
-			m_parent = parent_;
+			outer() = outer_;
+			parent() = parent_;
 		}
-		MapIt get(const ds::String<char_type> &name) { // get Data for value
-			MapIt result = m_map->get(name);
+		DataPtr get(const ds::String<char_type> &name) { // get Data for value
+			DataPtr result = getInCurrentEnv(name);
 			if (result)
 				return result;
-			MapEnvPtr ptr;
-			for (ptr = m_outer; ptr; ptr = ptr->m_outer) {
-				result = ptr->m_map->get(name);
+			EnvPtr ptr;
+			for (ptr = outer(); ptr; ptr = ptr->outer()) {
+				result = ptr->getInCurrentEnv(name);
 				if (result)
 					return result;
 			}
 			return nullptr;
 		}
-		MapIt getOrCreate(const ds::String<char_type> &name) { // get pointer to Data's position, if it doesn't have one, create it in the current scope
-			MapIt result = m_map->get(name);
-			MapEnvPtr ptr;
-			for (ptr = m_outer; !result && ptr; ptr = ptr->m_outer) {
-				result = ptr->m_map->get(name);
+		DataPtr getOrCreate(const ds::String<char_type> &name) { // get pointer to Data's position, if it doesn't have one, create it in the current scope
+			DataPtr result = getInCurrentEnv(name);
+			EnvPtr ptr;
+			for (ptr = outer(); !result && ptr; ptr = ptr->outer()) {
+				result = ptr->getInCurrentEnv(name);
 			}
 			if (result) {
 				return result;
@@ -38,8 +37,11 @@ namespace stone {
 				return m_map->getOrCreate(name);
 			}
 		}
+	protected:
+		DataPtr getInCurrentEnv(const ds::String<char_type> &name) {
+			return m_map->get(name);
+		}
 	private:
 		std::shared_ptr<ds::Map<ds::String<char_type>, std::shared_ptr<Data> > > m_map;
-		MapEnvPtr m_outer, m_parent;
 	};
 }

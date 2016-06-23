@@ -17,6 +17,10 @@ namespace stone {
 
 	class StmtAST : public AST {
 	public:
+		static StmtAST *nullStmt() {
+			static StmtAST *nullStmt_ = new StmtAST();
+			return nullStmt_;
+		}
 		void accept(ASTVisitor *visitor);
 		~StmtAST() {
 		}

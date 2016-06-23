@@ -52,7 +52,7 @@ namespace stone {
 			expect("(");
 			ExprAST *conditionExpr = parseExpr(0);
 			expect(")");
-			StmtAST *trueStmt = parseStmt(), *elseStmt = nullptr;
+			StmtAST *trueStmt = parseStmt(), *elseStmt = StmtAST::nullStmt();
 			if (!m_lexer->isEnd()) {
 				Token *token = m_lexer->peek(0);
 				if (token->type() == Token::KEYWORD && token->string() == "else") {
@@ -177,7 +177,7 @@ namespace stone {
 					result = parseBlockWithBraces();
 				} else if (firstToken->string() == ";") {
 					m_lexer->read();
-					return new StmtAST();
+					return StmtAST::nullStmt();
 				}
 			} else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO: 
 				result = new ExprStmtAST(parseExpr(0));
