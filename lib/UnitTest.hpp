@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <ctime>
-#include "stdafx.h"
-#include <Windows.h>
 
 
 inline void title(const char *message) {

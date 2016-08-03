@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Map.hpp"
-#include "stdafx.h"
 #include <memory>
 
 namespace ds {
@@ -18,20 +17,20 @@ namespace ds {
 			insert(m_root, key, value);
 		}
 		ValuePtr get(const KeyType &key) {
-			SBTNode::NodePtr nodePtr = find(m_root, key);
+			typename SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul())
 				return nullptr;
 			return nodePtr->valuePtr;
 		}
 		ValuePtr getOrCreate(const KeyType &key) {
-			SBTNode::NodePtr nodePtr = find(m_root, key);
+			typename SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul()) {
 				nodePtr = insert(m_root, key, ValueType());
 			}
 			return nodePtr->valuePtr;
 		}
 		void put(const KeyType &key, const ValueType &value) {
-			SBTNode::NodePtr nodePtr = find(m_root, key);
+			typename SBTNode::NodePtr nodePtr = find(m_root, key);
 			if (nodePtr == nul()) {
 				nodePtr = insert(m_root, key, ValueType());
 			}

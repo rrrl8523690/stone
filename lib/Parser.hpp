@@ -6,7 +6,7 @@
 #include "Message.hpp"
 
 namespace stone {
-	typedef typename char char_type;
+	typedef char char_type;
 	using std::cerr;
 	using std::endl;
 	class Parser {

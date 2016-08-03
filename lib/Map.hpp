@@ -9,8 +9,6 @@ namespace ds {
 		using It = std::shared_ptr<ValueType>;
 		virtual ~MapImpl() {
 		}
-		//virtual void insert(const KeyType &key, const ValueType &value) = 0;
-		virtual It get(const KeyType &key) = 0;
 		virtual It getOrCreate(const KeyType &key) = 0;
 		virtual void put(const KeyType &key, const ValueType &value) = 0;
 	};

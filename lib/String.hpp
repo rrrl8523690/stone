@@ -4,226 +4,237 @@
 #include <sstream>
 
 namespace ds {
-	template<class T = char>
-	class String : public Array<T> {
-	public:
-		String();
-		String(const T *string);
-		String(const String<T>& anotherString);
-		String(String<T>&& anotherString);
-		static String<T> number(int);
-		String<T>& append(const T& character);
-		String<T> subString(const uint& l, const uint& r) const;
-		String<T>& operator=(const String<T>& anotherString);
-		String<T>& operator=(String<T>&& anotherString);
-		String<T> operator+(const T& character) const;
-		String<T> operator+(const String<T>& anotherString) const;
-		String<T>& operator+=(const String<T>& anotherString);
-		bool operator==(const String<T>& anotherString) const;
-		bool operator!=(const String<T>& anotherString) const;
-		bool operator<(const String<T>& anotherString) const;
-		bool operator<=(const String<T>& anotherString) const;
-		bool operator>(const String<T>& anotherString) const;
-		bool operator>=(const String<T>& anotherString) const;
-		friend std::ostream& operator<<(std::ostream& os, const String<T>& str) {
-			for (uint i = 0; i < str.size(); i++)
-				os << str[i];
-			return os;
-		}
-	private:
-		inline void helpMove(String<T>&& anotherString) {
-			if (this != &anotherString) {
-				delete[] itemList;
-				itemList = anotherString.itemList;
-				listSize = anotherString.listSize;
-				maxListSize = anotherString.maxListSize;
-				anotherString.itemList = nullptr;
-				anotherString.listSize = 0;
-				anotherString.maxListSize = 0;
-			}
-		}
-	};
+    template<class T = char>
+    class String : public Array<T> {
+    public:
+        String();
 
-	template<class T>
-	String<T>::String() {
-		initialize();
-	}
+        String(const T *string);
 
-	template<class T>
-	String<T>::String(const T *string) {
-		uint length = 0;
-		for (length = 0; string[length]; length++);
-		resize(length);
-		for (uint i = 0; string[i]; i++)
-			itemList[i] = string[i];
-	}
+        String(const String<T> &anotherString);
 
-	template<class T>
-	String<T>::String(const String<T>& anotherString) {
-		resize(anotherString.size());
-		for (uint i = 0; i < anotherString.size(); i++)
-			itemList[i] = anotherString[i];
-	}
+        String(String<T> &&anotherString);
 
-	template<class T>
-	String<T>::String(String<T>&& anotherString) {
-		initialize();
-		helpMove(std::move(anotherString));
-	}
+        static String<T> number(int);
 
-	template<class T>
-	inline String<T> String<T>::subString(const uint& l, const uint& r) const {
-		String<T> resultString;
-		for (uint i = l; i < r; i++) {
-			resultString.append(itemList[i]);
-		}
-		return resultString;
-	}
+        String<T> subString(const uint &l, const uint &r) const;
 
-	template<class T>
-	inline String<T>& String<T>::append(const T& character) {
-		Array<T>::append(character);
-		return *this;
-	}
+        String<T> &operator=(const String<T> &anotherString);
 
-	template<class T>
-	String<T> String<T>::number(int num) {
-		std::ostringstream oss;
-		oss << num;
-		std::string str = oss.str();
-		String<T> res;
-		for (uint i = 0; i < str.size(); i++)
-			res.append(str[i]);
-		return res;
-	}
+        String<T> &operator=(String<T> &&anotherString);
 
-	template<class T>
-	inline String<T>& String<T>::operator=(const String<T>& anotherString) {
-		resize(anotherString.size());
-		for (uint i = 0; i < anotherString.size(); i++) {
-			itemList[i] = anotherString[i];
-		}
-		return *this;
-	}
+        String<T> operator+(const T &character) const;
 
-	template<class T>
-	inline String<T>& String<T>::operator=(String<T>&& anotherString) {
-		helpMove(std::move(anotherString));
-		return *this;
-	}
+        String<T> operator+(const String<T> &anotherString) const;
 
-	template<class T>
-	inline String<T> String<T>::operator+(const T& character) const {
-		String result = *this;
-		result.append(character);
-		return result;
-	}
+        String<T> &operator+=(const String<T> &anotherString);
 
-	template<class T>
-	inline String<T> operator+(const T& character, const String<T>& str) {
-		String<T> result;
-		result.resize(1);
-		result[0] = character;
-		return result += str;
-	}
+        bool operator==(const String<T> &anotherString) const;
 
-	template<class T>
-	inline String<T> String<T>::operator+(const String<T>& anotherString) const {
-		String<T> result;
-		uint mySize = size(), anotherSize = anotherString.size();
-		result.resize(mySize + anotherSize);
-		for (uint i = 0; i < mySize; i++) {
-			result[i] = itemList[i];
-		}
-		for (uint i = 0; i < anotherSize; i++) {
-			result[i + mySize] = anotherString[i];
-		}
-		return result;
-	}
+        bool operator!=(const String<T> &anotherString) const;
 
-	template<class T>
-	inline String<T>& String<T>::operator+=(const String<T>& anotherString) {
-		uint mySize = listSize, anotherSize = anotherString.size();
-		uint newListSize = listSize + anotherSize;
-		if (maxListSize < newListSize)
-			setMaxSize(max(newListSize, maxListSize * factor));
-		listSize = newListSize;
-		for (uint i = 0; i < anotherSize; i++)
-			itemList[i + mySize] = anotherString[i];
-		return *this;
-	}
+        bool operator<(const String<T> &anotherString) const;
 
-	template<class T>
-	inline bool String<T>::operator==(const String<T>& anotherString) const {
-		if (size() != anotherString.size())
-			return false;
-		for (uint i = 0; i < size(); i++)
-			if (itemList[i] != anotherString[i])
-				return false;
-		return true;
-	}
+        bool operator<=(const String<T> &anotherString) const;
 
-	template<class T>
-	inline bool String<T>::operator!=(const String<T>& anotherString) const {
-		return !(operator==(anotherString));
-	}
+        bool operator>(const String<T> &anotherString) const;
 
-	template<class T>
-	inline bool String<T>::operator<=(const String<T>& anotherString) const {
-		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
-			if (itemList[i] != anotherString[i])
-				return itemList[i] < anotherString[i];
-		}
-		return size() <= anotherString.size();
-	}
+        bool operator>=(const String<T> &anotherString) const;
 
-	template<class T>
-	inline bool String<T>::operator>(const String<T>& anotherString) const {
-		return !(operator<=(anotherString));
-	}
+        friend std::ostream &operator<<(std::ostream &os, const String<T> &str) {
+            for (uint i = 0; i < str.size(); i++)
+                os << str[i];
+            return os;
+        }
 
-	template<class T>
-	inline bool String<T>::operator<(const String<T>& anotherString) const {
-		for (uint i = 0; i < size() && i < anotherString.size(); i++) {
-			if (itemList[i] != anotherString[i])
-				return itemList[i] < anotherString[i];
-		}
-		return size() < anotherString.size();
-	}
+    private:
+        inline void helpMove(String<T> &&anotherString) {
+            if (this != &anotherString) {
+                delete[] this->m_items;
+                this->m_items = anotherString.m_items;
+                this->m_size = anotherString.m_size;
+                this->m_maxSize = anotherString.m_maxSize;
+                anotherString.m_items = nullptr;
+                anotherString.m_size = 0;
+                anotherString.m_maxSize = 0;
+            }
+        }
+    };
 
-	template<class T>
-	inline bool String<T>::operator>=(const String<T>& anotherString) const {
-		return !(operator<(anotherString));
-	}
+    template<class T>
+    String<T>::String() {
+        this->initialize();
+    }
 
-	template<class T>
-	inline bool operator==(const T *literalString, const String<T>& anotherString) {
-		return anotherString == literalString;
-	}
+    template<class T>
+    String<T>::String(const T *string) {
+        uint length = 0;
+        for (length = 0; string[length]; length++);
+        this->resize(length);
+        for (uint i = 0; string[i]; i++)
+            this->m_items[i] = string[i];
+    }
 
-	template<class T>
-	bool operator!=(const T *literalString, const String<T>& anotherString) {
-		return anotherString != literalString;
-	}
+    template<class T>
+    String<T>::String(const String<T> &anotherString) {
+        this->resize(anotherString.size());
+        for (uint i = 0; i < anotherString.size(); i++)
+            this->m_items[i] = anotherString[i];
+    }
 
-	template<class T>
-	bool operator<(const T *literalString, const String<T>& anotherString) {
-		return anotherString > literalString;
-	}
+    template<class T>
+    String<T>::String(String<T> &&anotherString) {
+        this->initialize();
+        helpMove(std::move(anotherString));
+    }
 
-	template<class T>
-	bool operator<=(const T *literalString, const String<T>& anotherString) {
-		return anotherString >= literalString;
-	}
+    template<class T>
+    inline String<T> String<T>::subString(const uint &l, const uint &r) const {
+        String<T> resultString;
+        for (uint i = l; i < r; i++) {
+            resultString.append(this->m_items[i]);
+        }
+        return resultString;
+    }
 
-	template<class T>
-	bool operator>(const T *literalString, const String<T>& anotherString) {
-		return anotherString < literalString;
-	}
+    template<class T>
+    String<T> String<T>::number(int num) {
+        std::ostringstream oss;
+        oss << num;
+        std::string str = oss.str();
+        String<T> res;
+        for (uint i = 0; i < str.size(); i++)
+            res.append(str[i]);
+        return res;
+    }
 
-	template<class T>
-	bool operator>=(const T *literalString, const String<T>& anotherString) {
-		return anotherString <= literalString;
-	}
+    template<class T>
+    inline String<T> &String<T>::operator=(const String<T> &anotherString) {
+        this->resize(anotherString.size());
+        for (uint i = 0; i < anotherString.size(); i++) {
+            this->m_items[i] = anotherString[i];
+        }
+        return *this;
+    }
+
+    template<class T>
+    inline String<T> &String<T>::operator=(String<T> &&anotherString) {
+        this->helpMove(std::move(anotherString));
+        return *this;
+    }
+
+    template<class T>
+    inline String<T> String<T>::operator+(const T &character) const {
+        String result = *this;
+        result.append(character);
+        return result;
+    }
+
+    template<class T>
+    inline String<T> operator+(const T &character, const String<T> &str) {
+        String<T> result;
+        result.resize(1);
+        result[0] = character;
+        return result += str;
+    }
+
+    template<class T>
+    inline String<T> String<T>::operator+(const String<T> &anotherString) const {
+        String<T> result;
+        uint mySize = this->size(), anotherSize = anotherString.size();
+        result.resize(mySize + anotherSize);
+        for (uint i = 0; i < mySize; i++) {
+            result[i] = this->m_items[i];
+        }
+        for (uint i = 0; i < anotherSize; i++) {
+            result[i + mySize] = anotherString[i];
+        }
+        return result;
+    }
+
+    template<class T>
+    inline String<T> &String<T>::operator+=(const String<T> &anotherString) {
+        uint mySize = this->m_size, anotherSize = anotherString.size();
+        uint newListSize = this->m_size + anotherSize;
+        if (this->m_maxSize < newListSize)
+            this->setMaxSize(max(newListSize, this->m_maxSize * this->m_factor));
+        this->m_size = newListSize;
+        for (uint i = 0; i < anotherSize; i++)
+            this->m_items[i + mySize] = anotherString[i];
+        return *this;
+    }
+
+    template<class T>
+    inline bool String<T>::operator==(const String<T> &anotherString) const {
+        if (this->size() != anotherString.size())
+            return false;
+        for (uint i = 0; i < this->size(); i++)
+            if (this->m_items[i] != anotherString[i])
+                return false;
+        return true;
+    }
+
+    template<class T>
+    inline bool String<T>::operator!=(const String<T> &anotherString) const {
+        return !(operator==(anotherString));
+    }
+
+    template<class T>
+    inline bool String<T>::operator<=(const String<T> &anotherString) const {
+        for (uint i = 0; i < this->size() && i < anotherString.size(); i++) {
+            if (this->m_items[i] != anotherString[i])
+                return this->m_items[i] < anotherString[i];
+        }
+        return this->size() <= anotherString.size();
+    }
+
+    template<class T>
+    inline bool String<T>::operator>(const String<T> &anotherString) const {
+        return !(operator<=(anotherString));
+    }
+
+    template<class T>
+    inline bool String<T>::operator<(const String<T> &anotherString) const {
+        for (uint i = 0; i < this->size() && i < anotherString.size(); i++) {
+            if (this->m_items[i] != anotherString[i])
+                return this->m_items[i] < anotherString[i];
+        }
+        return this->size() < anotherString.size();
+    }
+
+    template<class T>
+    inline bool String<T>::operator>=(const String<T> &anotherString) const {
+        return !(operator<(anotherString));
+    }
+
+    template<class T>
+    inline bool operator==(const T *literalString, const String<T> &anotherString) {
+        return anotherString == literalString;
+    }
+
+    template<class T>
+    bool operator!=(const T *literalString, const String<T> &anotherString) {
+        return anotherString != literalString;
+    }
+
+    template<class T>
+    bool operator<(const T *literalString, const String<T> &anotherString) {
+        return anotherString > literalString;
+    }
+
+    template<class T>
+    bool operator<=(const T *literalString, const String<T> &anotherString) {
+        return anotherString >= literalString;
+    }
+
+    template<class T>
+    bool operator>(const T *literalString, const String<T> &anotherString) {
+        return anotherString < literalString;
+    }
+
+    template<class T>
+    bool operator>=(const T *literalString, const String<T> &anotherString) {
+        return anotherString <= literalString;
+    }
 
 }

@@ -4,7 +4,7 @@
 #include "String.hpp"
 
 namespace stone {
-	typedef typename char char_type;
+	typedef char char_type;
 
 	class ASTVisitor;
 	class ExprAST;
