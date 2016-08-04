@@ -78,15 +78,15 @@ namespace stone {
 			expect("for");
 			expect("(");
 			ExprAST *init = nullptr, *condition = nullptr, *step = nullptr;
-			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ";") {
+			if (!(m_lexer->peek(0)->type() == Token::SYM) || m_lexer->peek(0)->string() != ";") {
 				init = parseExpr(0);
 			}
 			expect(";");
-			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ";") {
+			if (!(m_lexer->peek(0)->type() == Token::SYM) || m_lexer->peek(0)->string() != ";") {
 				condition = parseExpr(0);
 			}
 			expect(";");
-			if (!m_lexer->peek(0)->type() == Token::SYM || m_lexer->peek(0)->string() != ")") {
+			if (!(m_lexer->peek(0)->type() == Token::SYM) || m_lexer->peek(0)->string() != ")") {
 				step = parseExpr(0);
 			}
 			expect(")");
@@ -257,14 +257,14 @@ namespace stone {
 					result = parseExpr(0);
 					expect(")");
 					PostfixAST *postfix;
-					while (postfix = parsePostfix())
+					while ((postfix = parsePostfix()))
 						result->appendPostfix(postfix);
 				} else { // TODO: error
 				}
 			} else if (firstToken->type() == Token::ID) { // P -> v [Postfixes]
 				result = new VarAST(firstToken->string());
 				PostfixAST *postfix;
-				while (postfix = parsePostfix())
+				while ((postfix = parsePostfix()))
 					result->appendPostfix(postfix);
 			} else if (firstToken->type() == Token::NUM) {
 				result = new IntLiteralAST(firstToken->string());

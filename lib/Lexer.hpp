@@ -46,7 +46,7 @@ namespace stone {
         }
 
     private:
-        static bool isInCharSet(char_type ch, char_type charset[]) {
+        static bool isInCharSet(char_type ch, const char_type* charset) {
             for (uint i = 0; charset[i]; i++)
                 if (ch == charset[i])
                     return true;
