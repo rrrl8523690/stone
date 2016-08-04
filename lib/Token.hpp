@@ -155,18 +155,19 @@ namespace stone {
 		OpType m_opType;
 	};
 
-	extern Operator assignOp("=", 0, Operator::RIGHT, 2, Operator::ASSIGN);
-	extern Operator orElseOp("||", 2, Operator::LEFT, 2, Operator::ORELSE);
-	extern Operator andAlsoOp("&&", 3, Operator::LEFT, 2, Operator::ANDALSO);
-	extern Operator equalOp("==", 4, Operator::LEFT, 2, Operator::EQUAL);
-	extern Operator notEqualOp("!=", 4, Operator::LEFT, 2, Operator::NOTEQUAL);
-	extern Operator addOp("+", 5, Operator::LEFT, 2, Operator::ADD);
-	extern Operator subOp("-", 5, Operator::LEFT, 2, Operator::SUB);
-	extern Operator mulOp("*", 7, Operator::LEFT, 2, Operator::MUL);
-	extern Operator divOp("/", 7, Operator::LEFT, 2, Operator::DIV);
-	extern Operator modOp("%", 7, Operator::LEFT, 2, Operator::MOD);
-	extern Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
-	extern Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
+    extern Operator assignOp, orElseOp, andAlsoOp, equalOp, notEqualOp, addOp, subOp, mulOp, divOp, modOp, negativeOp, positiveOp;
+	Operator assignOp("=", 0, Operator::RIGHT, 2, Operator::ASSIGN);
+	Operator orElseOp("||", 2, Operator::LEFT, 2, Operator::ORELSE);
+	Operator andAlsoOp("&&", 3, Operator::LEFT, 2, Operator::ANDALSO);
+	Operator equalOp("==", 4, Operator::LEFT, 2, Operator::EQUAL);
+	Operator notEqualOp("!=", 4, Operator::LEFT, 2, Operator::NOTEQUAL);
+	Operator addOp("+", 5, Operator::LEFT, 2, Operator::ADD);
+	Operator subOp("-", 5, Operator::LEFT, 2, Operator::SUB);
+	Operator mulOp("*", 7, Operator::LEFT, 2, Operator::MUL);
+	Operator divOp("/", 7, Operator::LEFT, 2, Operator::DIV);
+	Operator modOp("%", 7, Operator::LEFT, 2, Operator::MOD);
+	Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
+	Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
 
 	Array <Operator*> opArray = { &assignOp, &orElseOp, &andAlsoOp, &equalOp, &notEqualOp, &addOp, &subOp, &mulOp, &divOp, &modOp, &positiveOp, &negativeOp };
 

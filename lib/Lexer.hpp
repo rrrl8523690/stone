@@ -25,8 +25,7 @@ namespace stone {
 
         bool expect(const String<char_type> &string_) {
             Token *token;
-            if ((token = read())->string() != string_) {
-                //std::cerr << "Lexer error at line " << token->lineNumber() << ": expected " << "'" << string_ << "'" << ", received " << "'" << token->string() << "'" << std::endl;
+            if (read()->string() != string_) {
                 return false;
             }
             return true;
@@ -36,7 +35,7 @@ namespace stone {
             return !fillTokens(1);
         }
 
-        Token *peek(int step) {
+        Token *peek(uint step) {
             if (!fillTokens(step + 1))
                 return nullptr;
             return m_tokens[m_head + step];
