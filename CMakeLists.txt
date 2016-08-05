@@ -8,12 +8,12 @@ set(SOURCE_FILES
         ds/ArrayUnitTest.hpp
         stone/AST.hpp
         stone/ASTPrinter.hpp
-        main/common.h
+        common/common.h
         stone/Data.hpp
         stone/Env.hpp
         stone/Interpreter.hpp
         stone/Lexer.hpp
-        main/lib.cpp
+        main.cpp
         ds/Map.hpp
         stone/MapEnv.hpp
         ds/MapUnitTest.hpp
@@ -22,10 +22,10 @@ set(SOURCE_FILES
         stone/Reader.hpp
         ds/String.hpp
         ds/StringUnitTest.hpp
-        main/test.stone
+        test.stone
         stone/Token.hpp
         ds/TreeMapImpl.hpp
-        main/UnitTest.hpp
+        common/UnitTest.hpp
     README.md)
 
 include_directories("${PROJECT_SOURCE_DIR}")
