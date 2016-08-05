@@ -66,15 +66,13 @@ void stoneTest() {
 
 int main() {
     using namespace std;
-    ArrayUnitTest::run();
-    StringUnitTest::run();
+//    ArrayUnitTest::run();
+//    StringUnitTest::run();
     //MapUnitTest::run();
-//    stoneTest();
+    stoneTest();
     //stoneParserTest();
     //visitorTest();
     //stoneLexerTest();
     //test();
-    //re::RegExpParser<char> parser("asdf");
-    //re::RegExpReader<char> m_reader("fas");
     return 0;
 }

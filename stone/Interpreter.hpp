@@ -5,7 +5,7 @@
 #include "stone/Token.hpp"
 #include "ds/Map.hpp"
 #include "stone/MapEnv.hpp"
-#include "common/common.h"
+#include "common/Common.h"
 #include "stone/Message.hpp"
 #include <memory>
 

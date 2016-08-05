@@ -8,7 +8,7 @@ set(SOURCE_FILES
         ds/ArrayUnitTest.hpp
         stone/AST.hpp
         stone/ASTPrinter.hpp
-        common/common.h
+        common/Common.h
         stone/Data.hpp
         stone/Env.hpp
         stone/Interpreter.hpp
