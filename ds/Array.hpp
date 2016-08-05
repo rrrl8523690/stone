@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Iterator.hpp"
-#include "common.h"
+#include "../main/common.h"
 #include <iostream>
 #include <initializer_list>
 

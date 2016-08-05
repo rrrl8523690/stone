@@ -1,32 +1,31 @@
 cmake_minimum_required(VERSION 3.5)
-project(lib)
+project(stone)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
-        lib/Array.hpp
-        lib/ArrayUnitTest.hpp
-        lib/AST.hpp
-        lib/ASTPrinter.hpp
-        lib/common.h
-        lib/Data.hpp
-        lib/Env.hpp
-        lib/Interpreter.hpp
-        lib/Iterator.hpp
-        lib/Lexer.hpp
-        lib/lib.cpp
-        lib/Map.hpp
-        lib/MapEnv.hpp
-        lib/MapUnitTest.hpp
-        lib/Message.hpp
-        lib/Parser.hpp
-        lib/Reader.hpp
-        lib/String.hpp
-        lib/StringUnitTest.hpp
-        lib/test.stone
-        lib/Token.hpp
-        lib/TreeMapImpl.hpp
-        lib/UnitTest.hpp
-        README.md)
+        ds/Array.hpp
+        ds/ArrayUnitTest.hpp
+        stone/AST.hpp
+        stone/ASTPrinter.hpp
+        main/common.h
+        stone/Data.hpp
+        stone/Env.hpp
+        stone/Interpreter.hpp
+        stone/Lexer.hpp
+        main/lib.cpp
+        ds/Map.hpp
+        stone/MapEnv.hpp
+        ds/MapUnitTest.hpp
+        stone/Message.hpp
+        stone/Parser.hpp
+        stone/Reader.hpp
+        ds/String.hpp
+        ds/StringUnitTest.hpp
+        main/test.stone
+        stone/Token.hpp
+        ds/TreeMapImpl.hpp
+        main/UnitTest.hpp
+    README.md)
 
-add_executable(lib ${SOURCE_FILES})
+add_executable(stone ${SOURCE_FILES})

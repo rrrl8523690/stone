@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Token.hpp"
-#include "String.hpp"
+#include "../ds/String.hpp"
 #include "Reader.hpp"
 
 namespace stone {

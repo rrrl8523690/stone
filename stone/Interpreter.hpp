@@ -3,9 +3,9 @@
 #include "Env.hpp"
 #include "AST.hpp"
 #include "Token.hpp"
-#include "Map.hpp"
+#include "../ds/Map.hpp"
 #include "MapEnv.hpp"
-#include "common.h"
+#include "../main/common.h"
 #include "Message.hpp"
 #include <memory>
 

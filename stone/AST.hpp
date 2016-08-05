@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Array.hpp" 
-#include "String.hpp"
+#include "../ds/Array.hpp"
+#include "../ds/String.hpp"
 
 namespace stone {
 	typedef char char_type;

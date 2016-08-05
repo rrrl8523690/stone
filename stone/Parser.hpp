@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Lexer.hpp"
-#include "String.hpp"
+#include "../ds/String.hpp"
 #include "AST.hpp"
 #include "Message.hpp"
 
