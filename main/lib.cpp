@@ -1,17 +1,17 @@
 #include <iostream>
 #include <fstream>
-#include "../ds/Array.hpp"
-#include "../ds/String.hpp"
-#include "../stone/Message.hpp"
-#include "../ds/ArrayUnitTest.hpp"
-#include "../ds/StringUnitTest.hpp"
-#include "../stone/Interpreter.hpp"
-#include "../stone/MapEnv.hpp"
-#include "../ds/MapUnitTest.hpp"
-#include "../stone/Lexer.hpp"
-#include "../stone/Parser.hpp"
-#include "../stone/ASTPrinter.hpp"
-#include "../stone/Data.hpp"
+#include "ds/Array.hpp"
+#include "ds/String.hpp"
+#include "stone/Message.hpp"
+#include "ds/ArrayUnitTest.hpp"
+#include "ds/StringUnitTest.hpp"
+#include "stone/Interpreter.hpp"
+#include "stone/MapEnv.hpp"
+#include "ds/MapUnitTest.hpp"
+#include "stone/Lexer.hpp"
+#include "stone/Parser.hpp"
+#include "stone/ASTPrinter.hpp"
+#include "stone/Data.hpp"
 
 
 void dsUnitTest() {

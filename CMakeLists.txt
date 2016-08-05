@@ -28,4 +28,6 @@ set(SOURCE_FILES
         main/UnitTest.hpp
     README.md)
 
+include_directories("${PROJECT_SOURCE_DIR}")
+
 add_executable(stone ${SOURCE_FILES})

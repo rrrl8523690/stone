@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../main/common.h"
+#include "main/common.h"
 #include <iostream>
 #include <initializer_list>
 

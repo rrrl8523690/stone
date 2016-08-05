@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Array.hpp"
-#include "../main/UnitTest.hpp"
+#include "main/UnitTest.hpp"
 #include <iostream>
 #include <ctime>
 

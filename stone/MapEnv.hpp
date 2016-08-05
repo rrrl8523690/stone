@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ds/Map.hpp"
+#include "ds/Map.hpp"
 #include "Env.hpp"
-#include "../ds/String.hpp"
+#include "ds/String.hpp"
 #include <memory>
 
 namespace stone {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Data.hpp"
-#include "../ds/String.hpp"
-#include "../main/common.h"
-#include "../ds/Map.hpp"
+#include "ds/String.hpp"
+#include "main/common.h"
+#include "ds/Map.hpp"
 #include <memory>
 
 namespace stone {

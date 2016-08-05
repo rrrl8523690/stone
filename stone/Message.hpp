@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ds/String.hpp"
+#include "ds/String.hpp"
 #include "Token.hpp"
 
 namespace stone {
