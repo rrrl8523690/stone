@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ds/String.hpp"
-#include "main/common.h"
+#include "common/common.h"
 
 namespace stone {
     using namespace ds;

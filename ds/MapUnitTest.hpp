@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Map.hpp"
-#include "TreeMapImpl.hpp"
-#include "main/UnitTest.hpp"
-#include "String.hpp"
+#include "ds/Map.hpp"
+#include "ds/TreeMapImpl.hpp"
+#include "common/UnitTest.hpp"
+#include "ds/String.hpp"
 #include <algorithm>
 
 namespace ds {

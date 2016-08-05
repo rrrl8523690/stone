@@ -26,7 +26,7 @@ set(SOURCE_FILES
         stone/Token.hpp
         ds/TreeMapImpl.hpp
         common/UnitTest.hpp
-    README.md)
+    README.md stone/FuncSig.hpp ds/Pair.hpp ds/AutoComparable.hpp)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 

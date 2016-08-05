@@ -1,7 +1,7 @@
 #pragma once
 
-#include "String.hpp"
-#include "main/UnitTest.hpp"
+#include "ds/String.hpp"
+#include "common/UnitTest.hpp"
 
 class StringUnitTest {
 public:

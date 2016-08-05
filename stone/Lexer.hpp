@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Token.hpp"
+#include "stone/Token.hpp"
 #include "ds/String.hpp"
-#include "Reader.hpp"
+#include "stone/Reader.hpp"
 
 namespace stone {
     using namespace ds;

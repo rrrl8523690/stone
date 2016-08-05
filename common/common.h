@@ -4,10 +4,10 @@
 typedef unsigned int uint;
 
 enum ConsoleColor {
-    DEFAULT = 7,
-    TITLE = 13,
-    CORRECT = 2,
-    WRONG = 207
+    DEFAULT = 39,
+    TITLE = 34,
+    CORRECT = 32,
+    WRONG = 31
 };
 
 template<class T>
@@ -25,5 +25,5 @@ namespace stone {
 }
 
 void setConsoleColor(ConsoleColor color) {
-
+    std::cerr << "\033[" << color << "m";
 }

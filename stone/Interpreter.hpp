@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Env.hpp"
-#include "AST.hpp"
-#include "Token.hpp"
+#include "stone/Env.hpp"
+#include "stone/AST.hpp"
+#include "stone/Token.hpp"
 #include "ds/Map.hpp"
-#include "MapEnv.hpp"
-#include "main/common.h"
-#include "Message.hpp"
+#include "stone/MapEnv.hpp"
+#include "common/common.h"
+#include "stone/Message.hpp"
 #include <memory>
 
 

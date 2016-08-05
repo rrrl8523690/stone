@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Array.hpp"
-#include "main/UnitTest.hpp"
+#include "ds/Array.hpp"
+#include "common/UnitTest.hpp"
 #include <iostream>
 #include <ctime>
 
@@ -11,6 +11,15 @@ public:
         using namespace ds;
         using namespace std;
         title("Array Unit Test");
+        {
+            Array<int> a{1, 2, 3, 4, 5, 6};
+            Array<int> b(a);
+            b[2] = 5;
+            equal(a == b, false);
+            equal(a != b, true);
+            equal(a < b, true);
+            equal(a > b, false);
+        }
         {
             int arr[] = {1, 2, 3};
             Array<int> a(arr, 2);

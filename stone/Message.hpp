@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ds/String.hpp"
-#include "Token.hpp"
+#include "stone/Token.hpp"
 
 namespace stone {
     using namespace ds;

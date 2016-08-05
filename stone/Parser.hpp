@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Lexer.hpp"
-#include "../ds/String.hpp"
-#include "AST.hpp"
-#include "Message.hpp"
+#include "stone/Lexer.hpp"
+#include "ds/String.hpp"
+#include "stone/AST.hpp"
+#include "stone/Message.hpp"
 
 namespace stone {
 	typedef char char_type;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Map.hpp"
+#include "ds/Map.hpp"
 #include <memory>
 
 namespace ds {

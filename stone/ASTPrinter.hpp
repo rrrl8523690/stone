@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AST.hpp"
+#include "stone/AST.hpp"
 #include <iostream>
 
 namespace stone {

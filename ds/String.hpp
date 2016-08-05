@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Array.hpp"
+#include "ds/Array.hpp"
+#include "ds/AutoComparable.hpp"
 #include <sstream>
 
 namespace ds {
     template<class T = char>
-    class String : public Array<T> {
+    class String : virtual public Array<T>, virtual public AutoComparable<String<T> > {
     public:
         String();
 
@@ -29,17 +30,7 @@ namespace ds {
 
         String<T> &operator+=(const String<T> &anotherString);
 
-        bool operator==(const String<T> &anotherString) const;
-
-        bool operator!=(const String<T> &anotherString) const;
-
         bool operator<(const String<T> &anotherString) const;
-
-        bool operator<=(const String<T> &anotherString) const;
-
-        bool operator>(const String<T> &anotherString) const;
-
-        bool operator>=(const String<T> &anotherString) const;
 
         friend std::ostream &operator<<(std::ostream &os, const String<T> &str) {
             for (uint i = 0; i < str.size(); i++)
@@ -165,46 +156,8 @@ namespace ds {
     }
 
     template<class T>
-    inline bool String<T>::operator==(const String<T> &anotherString) const {
-        if (this->size() != anotherString.size())
-            return false;
-        for (uint i = 0; i < this->size(); i++)
-            if (this->m_items[i] != anotherString[i])
-                return false;
-        return true;
-    }
-
-    template<class T>
-    inline bool String<T>::operator!=(const String<T> &anotherString) const {
-        return !(operator==(anotherString));
-    }
-
-    template<class T>
-    inline bool String<T>::operator<=(const String<T> &anotherString) const {
-        for (uint i = 0; i < this->size() && i < anotherString.size(); i++) {
-            if (this->m_items[i] != anotherString[i])
-                return this->m_items[i] < anotherString[i];
-        }
-        return this->size() <= anotherString.size();
-    }
-
-    template<class T>
-    inline bool String<T>::operator>(const String<T> &anotherString) const {
-        return !(operator<=(anotherString));
-    }
-
-    template<class T>
     inline bool String<T>::operator<(const String<T> &anotherString) const {
-        for (uint i = 0; i < this->size() && i < anotherString.size(); i++) {
-            if (this->m_items[i] != anotherString[i])
-                return this->m_items[i] < anotherString[i];
-        }
-        return this->size() < anotherString.size();
-    }
-
-    template<class T>
-    inline bool String<T>::operator>=(const String<T> &anotherString) const {
-        return !(operator<(anotherString));
+        return this->Array<T>::operator<(anotherString);
     }
 
     template<class T>

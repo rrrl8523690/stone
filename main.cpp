@@ -66,10 +66,10 @@ void stoneTest() {
 
 int main() {
     using namespace std;
-//    ArrayUnitTest::run();
-//    StringUnitTest::run();
+    ArrayUnitTest::run();
+    StringUnitTest::run();
     //MapUnitTest::run();
-    stoneTest();
+//    stoneTest();
     //stoneParserTest();
     //visitorTest();
     //stoneLexerTest();

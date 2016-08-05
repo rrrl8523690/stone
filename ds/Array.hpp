@@ -1,6 +1,7 @@
 #pragma once
 
-#include "main/common.h"
+#include "ds/AutoComparable.hpp"
+#include "common/common.h"
 #include <iostream>
 #include <initializer_list>
 
@@ -9,7 +10,7 @@ namespace ds {
     class ArrayIterator;
 
     template<class T>
-    class Array {
+    class Array : public virtual AutoComparable<Array<T>> {
     public:
         Array();
 
@@ -52,9 +53,14 @@ namespace ds {
 
         Array<T> &operator=(Array<T> &&anotherArray);
 
-        bool operator==(const Array<T> &anotherArray) const;
-
-        bool operator!=(const Array<T> &anotherArray) const;
+        bool operator<(const Array<T> &anotherArray) const {
+            for (uint i = 0; i < this->m_size && i < anotherArray.m_size; i++) {
+                if (m_items[i] != anotherArray.m_items[i]) {
+                    return m_items[i] < anotherArray.m_items[i];
+                }
+            }
+            return m_size < anotherArray.m_size;
+        }
 
     protected:
         static const uint m_factor = 2;
@@ -242,21 +248,11 @@ namespace ds {
         return *this;
     }
 
-    template<class T>
-    inline bool Array<T>::operator==(const Array<T> &anotherArray) const {
-        if (m_size != anotherArray.m_size)
-            return false;
-        for (uint i = 0; i < m_size; i++) {
-            if (m_items[i] != anotherArray[i])
-                return false;
-        }
-        return true;
-    }
-
-    template<class T>
-    inline bool Array<T>::operator!=(const Array<T> &anotherArray) const {
-        return !(operator==(anotherArray));
-    }
+//
+//    template<class T>
+//    inline bool Array<T>::operator!=(const Array<T> &anotherArray) const {
+//        return !(operator==(anotherArray));
+//    }
 
     template<class T>
     inline void Array<T>::initialize() {
