@@ -14,7 +14,7 @@ namespace stone {
     class Interpreter : virtual public ASTVisitor {
     public:
         using EnvPtr = std::shared_ptr<Env>;
-        using DataPtr = std::shared_ptr<std::shared_ptr<Data> >;
+        using DataPtrPtr = Data::DataPtrPtr;
 
         Interpreter(EnvPtr env_ = EnvPtr(new MapEnv(nullptr, nullptr)))
                 : m_env(env_), m_msgHandler(new MsgPrinter(std::cerr)) {
@@ -65,7 +65,7 @@ namespace stone {
         }
 
         void visit(DefFuncStmtAST *ast) {
-            DataPtr funcData = m_env->getOrCreate(ast->funcName());
+            DataPtrPtr funcData = m_env->getOrCreate(ast->funcName());
             if (!funcData->get()) {
                 *funcData = Data::DataPtr(new FuncData());
             } else if (funcData->get()->type() != Data::FUNC) { // TODO: WARNING
@@ -107,7 +107,7 @@ namespace stone {
         }
 
         void visit(BinaryOpAST *ast) {
-            DataPtr lhs, rhs;
+            DataPtrPtr lhs, rhs;
 
             m_mayCreate = (ast->op()->type() == Operator::ASSIGN);
             ast->left()->accept(this);
@@ -119,20 +119,20 @@ namespace stone {
                 switch (opType) {
                     case Operator::ANDALSO:
                         if (!Data::toInt(*m_returnedData)->value()) {
-                            m_returnedData = toDataPtr(new IntData(false));
+                            m_returnedData = (new IntData(false))->toDataPtrPtr();
                             return;
                         }
                         goto dft;
                     case Operator::ORELSE:
                         if (Data::toInt(*m_returnedData)) {
-                            m_returnedData = toDataPtr(new IntData(true));
+                            m_returnedData = (new IntData(true))->toDataPtrPtr();
                             return;
                         }
                     default:
                     dft:
                         m_mayCreate = false;
                         ast->right()->accept(this);
-                        m_returnedData = toDataPtr(new IntData(!!Data::toInt(*m_returnedData)));
+                        m_returnedData = (new IntData(!!Data::toInt(*m_returnedData)))->toDataPtrPtr();
                         return;
                 }
             }
@@ -159,7 +159,7 @@ namespace stone {
         }
 
         void visit(IntLiteralAST *ast) {
-            m_returnedData = toDataPtr(new IntData(ast->value()));
+            m_returnedData = (new IntData(ast->value()))->toDataPtrPtr();
         }
 
         void visit(UnaryOpAST *ast) {
@@ -167,7 +167,7 @@ namespace stone {
             if (ast->op()->type() == Operator::NEGATIVE) {
                 if ((*m_returnedData)->type() == Data::INT) {
                     int tmp = static_cast<IntData *>(m_returnedData->get())->value();
-                    m_returnedData = toDataPtr(new IntData(-tmp));
+                    m_returnedData = (new IntData(-tmp))->toDataPtrPtr();
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace stone {
         void visit(VarAST *ast) {
             using std::cerr;
             using std::endl;
-            DataPtr data;
+            DataPtrPtr data;
             if (m_mayCreate) {
                 data = m_env->getOrCreate(ast->varName());
             } else {
@@ -199,16 +199,16 @@ namespace stone {
             m_msgHandler->receive(new Message(msg));
         }
 
-        static DataPtr toDataPtr(Data *data) {
+        static DataPtrPtr toDataPtr(Data *data) {
             std::shared_ptr<Data> tmp(data);
-            DataPtr res(new std::shared_ptr<Data>(tmp));
+            DataPtrPtr res(new std::shared_ptr<Data>(tmp));
             return res;
         }
 
 
         EnvPtr m_env;
         bool m_mayCreate;
-        DataPtr m_returnedData;
+        DataPtrPtr m_returnedData;
         MsgHandler *m_msgHandler;
     };
 }

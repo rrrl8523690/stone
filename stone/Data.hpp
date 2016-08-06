@@ -20,6 +20,7 @@ namespace stone {
         }
 
         using DataPtr = std::shared_ptr<Data>;
+        using DataPtrPtr = std::shared_ptr<DataPtr>;
         using IntDataPtr = std::shared_ptr<IntData>;
         using FuncDataPtr = std::shared_ptr<FuncData>;
         enum DataType {
@@ -32,6 +33,12 @@ namespace stone {
         };
 
         inline virtual DataType type() const = 0;
+
+        DataPtrPtr toDataPtrPtr() {
+            std::shared_ptr<Data> tmp(this);
+            DataPtrPtr res(new std::shared_ptr<Data>(tmp));
+            return res;
+        }
 
         static IntDataPtr toInt(DataPtr dataPtr) {
             return std::dynamic_pointer_cast<IntData>(dataPtr);

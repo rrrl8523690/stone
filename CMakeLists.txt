@@ -22,7 +22,6 @@ set(SOURCE_FILES
         stone/Reader.hpp
         ds/String.hpp
         ds/StringUnitTest.hpp
-        test.stone
         stone/Token.hpp
         ds/TreeMapImpl.hpp
         common/UnitTest.hpp

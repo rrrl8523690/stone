@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "ds/String.hpp"
 #include "common/Common.h"
 
@@ -113,6 +114,7 @@ namespace stone {
             MUL, DIV, MOD,
             ORELSE, ANDALSO,
             POSITIVE, NEGATIVE,
+            LESS, GREATER, NOTLESS, NOTGREATER,
             EQUAL, NOTEQUAL
         };
 
@@ -158,6 +160,14 @@ namespace stone {
                     return a == b;
                 case NOTEQUAL:
                     return a != b;
+                case LESS:
+                    return a < b;
+                case GREATER:
+                    return a > b;
+                case NOTLESS:
+                    return a >= b;
+                case NOTGREATER:
+                    return a <= b;
                 default:
                     std::cerr << "No such operator!" << std::endl;
             }
@@ -179,11 +189,14 @@ namespace stone {
         OpType m_opType;
     };
 
-    extern Operator assignOp, orElseOp, andAlsoOp, equalOp, notEqualOp, addOp, subOp, mulOp, divOp, modOp, negativeOp, positiveOp;
     Operator assignOp("=", 0, Operator::RIGHT, 2, Operator::ASSIGN);
     Operator orElseOp("||", 2, Operator::LEFT, 2, Operator::ORELSE);
     Operator andAlsoOp("&&", 3, Operator::LEFT, 2, Operator::ANDALSO);
     Operator equalOp("==", 4, Operator::LEFT, 2, Operator::EQUAL);
+    Operator lessOp("<", 4, Operator::LEFT, 2, Operator::LESS);
+    Operator greaterOp(">", 4, Operator::LEFT, 2, Operator::GREATER);
+    Operator notLessOp(">=", 4, Operator::LEFT, 2, Operator::NOTLESS);
+    Operator notGreaterOp("<=", 4, Operator::LEFT, 2, Operator::NOTGREATER);
     Operator notEqualOp("!=", 4, Operator::LEFT, 2, Operator::NOTEQUAL);
     Operator addOp("+", 5, Operator::LEFT, 2, Operator::ADD);
     Operator subOp("-", 5, Operator::LEFT, 2, Operator::SUB);
@@ -193,8 +206,11 @@ namespace stone {
     Operator negativeOp("-", 6, Operator::LEFT, 1, Operator::NEGATIVE);
     Operator positiveOp("+", 6, Operator::LEFT, 1, Operator::POSITIVE);
 
+//    extern Operator assignOp, orElseOp, andAlsoOp, equalOp, notEqualOp, addOp, subOp, mulOp, divOp, modOp, negativeOp, positiveOp, lessOp, greaterOp, notLessOp, notGreaterOp;
+
     Array<Operator *> opArray = {&assignOp, &orElseOp, &andAlsoOp, &equalOp, &notEqualOp, &addOp, &subOp, &mulOp,
-                                 &divOp, &modOp, &positiveOp, &negativeOp};
+                                 &divOp, &modOp, &positiveOp, &negativeOp, &lessOp, &greaterOp, &notLessOp,
+                                 &notGreaterOp};
 
     class OpToken : public Token {
     public:
@@ -207,6 +223,7 @@ namespace stone {
                 if (operandNum == opArray[i]->operandNum() && string() == opArray[i]->string())
                     return opArray[i];
             }
+            std::cerr << "Operator not found!" << std::endl;
             return nullptr;
         }
 
