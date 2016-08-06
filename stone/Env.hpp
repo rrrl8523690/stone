@@ -9,7 +9,6 @@
 namespace stone {
     class Env : public Data {
     public:
-        using DataPtr = std::shared_ptr<std::shared_ptr<Data> >;
         using EnvPtr = std::shared_ptr<Env>;
 
         virtual ~Env() {
@@ -19,9 +18,13 @@ namespace stone {
             return ENV;
         }
 
-        virtual DataPtr get(const ds::String<char_type> &name) = 0;
+        virtual DataPtrPtr get(const ds::String<char_type> &name) = 0;
 
-        virtual DataPtr getOrCreate(const ds::String<char_type> &name) = 0;
+        virtual DataPtrPtr getOrCreate(const ds::String<char_type> &name) = 0;
+
+        virtual DataPtrPtr create(const ds::String<char_type> &name) = 0;
+
+        virtual DataPtrPtr getInCurrentEnv(const ds::String<char_type> &name) = 0;
 
         EnvPtr &outer() {
             return m_outer;
@@ -30,8 +33,6 @@ namespace stone {
         EnvPtr &parent() {
             return m_parent;
         }
-
-        virtual DataPtr getInCurrentEnv(const ds::String<char_type> &name) = 0;
 
     private:
         EnvPtr m_outer, m_parent;

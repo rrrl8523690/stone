@@ -65,7 +65,7 @@ namespace stone {
         }
 
         void visit(DefFuncStmtAST *ast) {
-            DataPtrPtr funcDataPtrPtr = m_env->getOrCreate(ast->funcName());
+            DataPtrPtr funcDataPtrPtr = m_env->create(ast->funcName());
             if (!funcDataPtrPtr->get()) {
                 *funcDataPtrPtr = Data::DataPtr(new FuncData());
             } else if (funcDataPtrPtr->get()->type() != Data::FUNC) { // TODO: WARNING
@@ -91,12 +91,14 @@ namespace stone {
 
         void visit(CallFuncPostfixAST *ast) {
             DataPtrPtr funcPtrPtr = m_returnedData;
-            if (funcPtrPtr->get()->type() != Data::FUNC) { // TODO: error
+            if (!funcPtrPtr || !funcPtrPtr->get()) {
+                error("the name not found");
+            } else if (funcPtrPtr->get()->type() != Data::FUNC) { // TODO: error
                 std::cerr << funcPtrPtr->get()->type() << std::endl;
                 error("it is not callable");
             } else { // TODO: initialize default parameters
                 EnvPtr outerEnv = m_env;
-                m_env = EnvPtr(new MapEnv(outerEnv, outerEnv));
+                EnvPtr newEnv = EnvPtr(new MapEnv(outerEnv, outerEnv));
                 Data::FuncDataPtr funcDataPtr = std::dynamic_pointer_cast<FuncData>(*funcPtrPtr);
                 uint actualParamCnt = ast->params()->size();
                 DefFuncStmtAST *targetFunc = nullptr;
@@ -111,12 +113,16 @@ namespace stone {
                     error("no valid function");
                 } else if (targetFuncCnt > 1) {
                     error("ambiguous function call");
+                    std::cerr << targetFuncCnt << std::endl;
                 }
                 else {
                     for (uint i = 0; i < actualParamCnt; i++) {
-                        DataPtrPtr dataPtrPtr = m_env->getOrCreate(targetFunc->params()->at(i)->name());
+                        m_env = newEnv;
+                        DataPtrPtr dataPtrPtr = m_env->create(targetFunc->params()->at(i)->name());
+                        m_env = outerEnv;
                         ast->params()->at(i)->accept(this);
                         *dataPtrPtr = *m_returnedData;
+                        m_env = newEnv;
                     }
                     targetFunc->funcBody()->accept(this);
                 }
@@ -190,6 +196,7 @@ namespace stone {
                         m_returnedData = toDataPtr(new IntData(ast->op()->calculate(left, right)));
                     } else {
                         error("Type error when doing binary calculation.");
+                        std::cerr << (*lhs)->type() << " " << (*rhs)->type() << std::endl;
                     }
                     break;
             }
