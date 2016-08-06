@@ -6,6 +6,10 @@
 namespace stone {
     class FuncSig : virtual public AutoComparable<FuncSig> {
     public:
+        FuncSig() {
+            m_minParamCnt = m_maxParamCnt = 0;
+        }
+
         FuncSig(uint minParamCnt, uint maxParamCnt) {
             m_minParamCnt = minParamCnt;
             m_maxParamCnt = maxParamCnt;

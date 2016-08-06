@@ -110,6 +110,10 @@ namespace stone {
             m_functions = functions_;
         }
 
+        DefFuncArray *functions() {
+            return m_functions;
+        }
+
         ~FuncData() {
             delete m_functions;
         }

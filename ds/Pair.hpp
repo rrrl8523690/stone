@@ -6,6 +6,15 @@ namespace ds {
     template<class T1, class T2>
     class Pair : virtual public AutoComparable<Pair<T1, T2>> {
     public:
+        Pair() {
+
+        }
+
+        Pair(const T1 &t1, const T2 &t2) {
+            m_member1 = t1;
+            m_member2 = t2;
+        }
+
         T1 &first() {
             return m_member1;
         }
@@ -39,5 +48,10 @@ namespace ds {
     private:
         T1 m_member1;
         T2 m_member2;
+    };
+
+    template<class T1, class T2>
+    Pair<T1, T2> makePair(const T1 &t1, const T2 &t2) {
+        return Pair<T1, T2>(t1, t2);
     };
 }
