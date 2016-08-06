@@ -1,9 +1,10 @@
 # pragma once
 
-#include "common.common.h"
+#include "common/Common.h"
+#include "ds/AutoComparable.hpp"
 
 namespace stone {
-    class FuncSig {
+    class FuncSig : virtual public AutoComparable<FuncSig> {
     public:
         FuncSig(uint minParamCnt, uint maxParamCnt) {
             m_minParamCnt = minParamCnt;
@@ -14,7 +15,7 @@ namespace stone {
             return m_minParamCnt;
         }
 
-        unt maxParamCnt() const {
+        uint maxParamCnt() const {
             return m_maxParamCnt;
         }
 
@@ -23,23 +24,10 @@ namespace stone {
         }
 
         bool operator<(const FuncSig &f) const {
-            if (m_minParamCnt != f.minParamCnt)
-                return m_minParamCnt < f.minParamCnt;
+            if (m_minParamCnt != f.m_minParamCnt)
+                return m_minParamCnt < f.m_minParamCnt;
             return m_maxParamCnt;
         }
-
-        bool operator<=(const FuncSig &f) const {
-            return !(f < *this);
-        }
-
-        bool operator>(const FuncSig &f) const {
-            return f < *this;
-        }
-
-        bool operator<=(const FuncSig &f) const {
-            return !(*this < f);
-        }
-
 
     private:
         uint m_minParamCnt, m_maxParamCnt;
