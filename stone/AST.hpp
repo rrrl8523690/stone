@@ -411,8 +411,9 @@ namespace stone {
 
         }
 
-        VarAST(const String <char_type> &varName_) {
+        VarAST(const String <char_type> &varName_, CodePosition pos_) {
             m_varName = varName_;
+            m_pos = pos_;
         }
 
         void accept(ASTVisitor *visitor);

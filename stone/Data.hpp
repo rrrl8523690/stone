@@ -4,6 +4,7 @@
 #include "ds/Pair.hpp"
 #include "stone/FuncSig.hpp"
 #include "stone/AST.hpp"
+#include "stone/Env.hpp"
 
 namespace stone {
     class IntData;
@@ -13,6 +14,8 @@ namespace stone {
     class ObjData;
 
     class ArrayData;
+
+    class Env;
 
     class Data {
     public:
@@ -99,32 +102,6 @@ namespace stone {
         }
     };
 
-    class FuncData : public Data {
-        using DefFuncArray = ds::Array<ds::Pair<FuncSig, DefFuncStmtAST *>>;
-    public:
-        FuncData() {
-            m_functions = new ds::Array<ds::Pair<FuncSig, DefFuncStmtAST *>>();
-        }
-
-        FuncData(DefFuncArray *functions_) {
-            m_functions = functions_;
-        }
-
-        DefFuncArray *functions() {
-            return m_functions;
-        }
-
-        ~FuncData() {
-            delete m_functions;
-        }
-
-        DataType type() const {
-            return FUNC;
-        }
-
-    private:
-        DefFuncArray *m_functions;
-    };
 
     bool Data::isTrue(const DataPtr ptr) {
         switch (ptr->type()) {

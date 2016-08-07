@@ -262,7 +262,7 @@ namespace stone {
 				} else { // TODO: error
 				}
 			} else if (firstToken->type() == Token::ID) { // P -> v [Postfixes]
-				result = new VarAST(firstToken->string());
+				result = new VarAST(firstToken->string(), firstToken->codePosition());
 				PostfixAST *postfix;
 				while ((postfix = parsePostfix()))
 					result->appendPostfix(postfix);
