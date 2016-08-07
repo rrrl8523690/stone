@@ -231,7 +231,7 @@ namespace stone {
 				} else if (symbolToken->string() == "(") { // TODO: fix
 					Array<ExprAST*> *params = parseActualParams();
 					expect(")");
-					result = new CallFuncPostfixAST(params);
+					result = new CallFuncPostfixAST(params, symbolToken->codePosition());
 				}
 			} else { // TODO: ERROR
 			}

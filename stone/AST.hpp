@@ -2,6 +2,7 @@
 
 #include "ds/Array.hpp"
 #include "ds/String.hpp"
+#include "Token.hpp"
 
 namespace stone {
     typedef char char_type;
@@ -12,10 +13,20 @@ namespace stone {
 
     class AST {
     public:
+        AST() : m_pos(-1, -1) {
+        }
+
         virtual void accept(ASTVisitor *visitor);
 
         virtual ~AST() {
         }
+
+        CodePosition pos() const {
+            return m_pos;
+        }
+
+    protected:
+        CodePosition m_pos;
     };
 
     class StmtAST : public AST {
@@ -299,7 +310,8 @@ namespace stone {
 
     class CallFuncPostfixAST : public PostfixAST {
     public:
-        CallFuncPostfixAST(Array<ExprAST *> *params_) {
+        CallFuncPostfixAST(Array<ExprAST *> *params_, const CodePosition &pos_) {
+            m_pos = pos_;
             m_params = params_;
         }
 

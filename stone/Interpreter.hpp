@@ -92,6 +92,7 @@ namespace stone {
         void visit(CallFuncPostfixAST *ast) {
             DataPtrPtr funcPtrPtr = m_returnedData;
             if (!funcPtrPtr || !funcPtrPtr->get()) {
+                std::cerr << ast->pos().line() << ", " << ast->pos().kth() << ": ";
                 error("the name not found");
             } else if (funcPtrPtr->get()->type() != Data::FUNC) { // TODO: error
                 std::cerr << funcPtrPtr->get()->type() << std::endl;
@@ -112,6 +113,7 @@ namespace stone {
                 if (!targetFuncCnt) {
                     error("no valid function");
                 } else if (targetFuncCnt > 1) {
+                    std::cerr << ast->pos().line() << ", " << ast->pos().kth() << ": ";
                     error("ambiguous function call");
                     std::cerr << targetFuncCnt << std::endl;
                 }
