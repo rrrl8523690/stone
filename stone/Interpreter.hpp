@@ -126,6 +126,11 @@ namespace stone {
                         ast->params()->at(i)->accept(this);
                         *dataPtrPtr = *m_returnedData;
                     }
+                    for (uint i = actualParamCnt; i < targetFunc->params()->size(); i++) {
+                        DataPtrPtr paramPtrPtr = m_env->create(targetFunc->params()->at(i)->name());
+                        targetFunc->params()->at(i)->value()->accept(this);
+                        *paramPtrPtr = *m_returnedData;
+                    }
                     m_env = newEnv;
                     targetFunc->funcBody()->accept(this);
                 }
