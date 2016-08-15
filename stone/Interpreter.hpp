@@ -67,7 +67,7 @@ namespace stone {
         }
 
         void visit(DefFuncStmtAST *ast) {
-            DataPtrPtr funcDataPtrPtr = m_env->create(ast->funcName());
+            DataPtrPtr funcDataPtrPtr = m_env->getOrCreate(ast->funcName());
             if (!funcDataPtrPtr->get()) {
                 *funcDataPtrPtr = Data::DataPtr(new FuncData(m_env));
             } else if (funcDataPtrPtr->get()->type() != Data::FUNC) { // TODO: WARNING
@@ -76,7 +76,7 @@ namespace stone {
             Data::FuncDataPtr funcDataPtr = std::dynamic_pointer_cast<FuncData>(*funcDataPtrPtr);
             uint minCnt = 0, maxCnt = ast->params()->size();
             for (uint i = 0; i < ast->params()->size(); i++) {
-                if (ast->params()->at(i)->value())
+                if (!ast->params()->at(i)->value())
                     minCnt++;
             }
             funcDataPtr->functions()->append(makePair(FuncSig(minCnt, maxCnt), ast));
@@ -94,7 +94,6 @@ namespace stone {
         void visit(CallFuncPostfixAST *ast) {
             DataPtrPtr funcPtrPtr = m_returnedData;
             if (!funcPtrPtr || !funcPtrPtr->get()) {
-                std::cerr << ast->pos().line() << ", " << ast->pos().kth() << ": ";
                 error("the name not found");
             } else if (funcPtrPtr->get()->type() != Data::FUNC) { // TODO: error
                 std::cerr << funcPtrPtr->get()->type() << std::endl;
@@ -114,6 +113,7 @@ namespace stone {
                     }
                 }
                 if (!targetFuncCnt) { // TODO: error
+//                    std::cerr << funcDataPtr->functions()->size() << std::endl;
                     error("no valid function");
                 } else if (targetFuncCnt > 1) { // TODO: error
                     std::cerr << ast->pos().line() << ", " << ast->pos().kth() << ": ";
@@ -142,6 +142,7 @@ namespace stone {
         }
 
         void visit(PrintStmtAST *ast) {
+            m_mayCreate = false;
             ast->expr()->accept(this);
             if (m_returnedData->get()->type() == Data::INT) {
                 std::cout << "STONE OUTPUT: "
