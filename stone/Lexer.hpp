@@ -46,7 +46,7 @@ namespace stone {
         }
 
     private:
-        static bool isInCharSet(char_type ch, const char_type* charset) {
+        static bool isInCharSet(char_type ch, const char_type *charset) {
             for (uint i = 0; charset[i]; i++)
                 if (ch == charset[i])
                     return true;
@@ -98,14 +98,35 @@ namespace stone {
             m_kth++;
             while (!reader->isEnd()) {
                 ch = reader->read();
-                if (!isBlankChar(ch))
+                if (!isBlankChar(ch)) {
+                    if ('/' == ch) {
+                        reader->next();
+                        if ('/' == reader->read()) {
+                            while (!reader->isEnd() && reader->read() != '\n') {
+                                reader->next();
+                            }
+                            if (reader->isEnd())
+                                return false;
+                            reader->next();
+                            continue;
+                        } else {
+                            reader->prev();
+                            break;
+                        };
+                    }
                     break;
+                }
                 reader->next();
             }
-            if (reader->isEnd())
+            if (isblank(ch) && reader->isEnd())
                 return false;
             String<char_type> string;
-            if ('_' == ch || isLetter(ch)) { // IdToken or KeywordToken
+            if (ch == '/' && !reader->isEnd() && reader->read() == '/') { // Comment
+                while (!reader->isEnd() && reader->read() != '\n')
+                    reader->next();
+                if (!reader->isEnd())
+                    reader->next();
+            } else if ('_' == ch || isLetter(ch)) { // IdToken or KeywordToken
                 while (!reader->isEnd()) {
                     ch = reader->read();
                     if (isLetter(ch) || '_' == ch || isNum(ch))
