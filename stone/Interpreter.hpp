@@ -169,6 +169,7 @@ namespace stone {
                 lhs = m_returnedData;
                 *lhs = *rhs;
                 m_returnedData = lhs;
+                m_mayCreate = false;
             } else {
                 m_mayCreate = false;
                 ast->left()->accept(this);
