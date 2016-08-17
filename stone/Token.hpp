@@ -22,6 +22,10 @@ namespace stone {
             return m_kth;
         }
 
+        ds::String<> toString() const {
+            return ds::String<>::number(m_line) + ", " + ds::String<>::number(m_kth);
+        }
+
     private:
         uint m_line, m_kth;
     };

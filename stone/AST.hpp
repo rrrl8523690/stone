@@ -2,7 +2,9 @@
 
 #include "ds/Array.hpp"
 #include "ds/String.hpp"
-#include "Token.hpp"
+#include "stone/Token.hpp"
+#include "stone/Data.hpp"
+#include "Data.hpp"
 
 namespace stone {
     typedef char char_type;
@@ -278,8 +280,9 @@ namespace stone {
 
     class IndexPostfixAST : public PostfixAST {
     public:
-        IndexPostfixAST(ExprAST *indexExpr_) {
+        IndexPostfixAST(ExprAST *indexExpr_, CodePosition pos_) {
             m_indexExpr = indexExpr_;
+            m_pos = pos_;
         }
 
         void accept(ASTVisitor *);
@@ -367,7 +370,7 @@ namespace stone {
             m_value = res;
         }
 
-        virtual    ~IntLiteralAST() {
+        virtual ~IntLiteralAST() {
         }
 
         void accept(ASTVisitor *visitor);
@@ -378,6 +381,19 @@ namespace stone {
 
     private:
         int m_value;
+    };
+
+    class ArrayExprAST : public ExprAST {
+    public:
+        ArrayExprAST(Array<ExprAST *> *exprs_) {
+            m_exprs = exprs_;
+        }
+
+        virtual ~ArrayExprAST() {
+        }
+
+    private:
+        Array<ExprAST *> *m_exprs;
     };
 
     class UnaryOpAST : public ExprAST {

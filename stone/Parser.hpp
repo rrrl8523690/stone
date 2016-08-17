@@ -32,23 +32,6 @@ namespace stone {
             return result;
         }
 
-        ExprAST *parseExpr(uint precedence) { // Expr(p) -> P {B Expr(q)}
-            ExprAST *t = parseP();
-            Token *token;
-            while (!m_lexer->isEnd() && (token = m_lexer->peek(0))->type() == Token::OP
-                    ) {
-                //getPrecedence(token->string(), 2) >= precedence;
-                Operator *op = (dynamic_cast<OpToken *>(token))->getOperator(2);
-                if (op->precedence() < precedence)
-                    break;
-                m_lexer->read();
-                uint newPrecedence = (op->associativity() == Operator::RIGHT)
-                                     ? op->precedence() : op->precedence() + 1;
-                ExprAST *t1 = parseExpr(newPrecedence);
-                t = new BinaryOpAST(t, op, t1);
-            }
-            return t;
-        }
 
         IfStmtAST *parseIfStmt() { // if (condition) statement [else statement]
             IfStmtAST *result = nullptr;
@@ -223,9 +206,9 @@ namespace stone {
                 Token *symbolToken = m_lexer->read();
                 if (symbolToken->string() == "[") { // array index: [Expr]
                     ExprAST *indexExprAST = parseExpr(0);
-                    result = new IndexPostfixAST(indexExprAST);
+                    result = new IndexPostfixAST(indexExprAST, symbolToken->codePosition());
                     expect("]");
-                } else if (symbolToken->string() == ".") { // member: .MemberName
+                } else if (symbolToken->string() == ".") { // member: .memberName
                     Token *memberNameToken = m_lexer->read();
                     if (memberNameToken->type() != Token::ID) { // TODO: ERROR
                     }
@@ -240,6 +223,24 @@ namespace stone {
             return result;
         }
 
+        ExprAST *parseExpr(uint precedence) { // Expr(p) -> P {B Expr(q)}
+            ExprAST *t = parseP();
+            Token *token;
+            while (!m_lexer->isEnd() && (token = m_lexer->peek(0))->type() == Token::OP
+                    ) {
+                //getPrecedence(token->string(), 2) >= precedence;
+                Operator *op = (dynamic_cast<OpToken *>(token))->getOperator(2);
+                if (op->precedence() < precedence)
+                    break;
+                m_lexer->read();
+                uint newPrecedence = (op->associativity() == Operator::RIGHT)
+                                     ? op->precedence() : op->precedence() + 1;
+                ExprAST *t1 = parseExpr(newPrecedence);
+                t = new BinaryOpAST(t, op, t1);
+            }
+            return t;
+        }
+        
         ExprAST *parseP() {
             Token *firstToken = m_lexer->read();
             ExprAST *result = nullptr;
@@ -274,6 +275,7 @@ namespace stone {
             }
             return result;
         }
+
 
         void expect(const String<char_type> &string) {
             CodePosition pos(m_lexer->peek(0)->codePosition());

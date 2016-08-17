@@ -26,6 +26,7 @@ namespace stone {
         using DataPtrPtr = std::shared_ptr<DataPtr>;
         using IntDataPtr = std::shared_ptr<IntData>;
         using FuncDataPtr = std::shared_ptr<FuncData>;
+        using ArrayDataPtr = std::shared_ptr<ArrayData>;
         enum DataType {
             INT,
             DOUBLE,
@@ -49,6 +50,10 @@ namespace stone {
 
         static FuncDataPtr toFunc(DataPtr dataPtr) {
             return std::dynamic_pointer_cast<FuncData>(dataPtr);
+        }
+
+        static ArrayDataPtr toArray(DataPtr dataPtr) {
+            return std::dynamic_pointer_cast<ArrayData>(dataPtr);
         }
 
         static bool isTrue(const DataPtr ptr);
@@ -90,9 +95,23 @@ namespace stone {
 
     class ArrayData : public Data {
     public:
+       ArrayData(int initialSize = 0) {
+            m_array = new Array<DataPtr>(initialSize);
+        }
+
         DataType type() const {
             return ARRAY;
         }
+
+        ~ArrayData() {
+            delete m_array;
+        }
+
+        Array<DataPtr> *array() {
+            return m_array;
+        }
+    private:
+        Array<DataPtr> *m_array;
     };
 
     class ObjData : public Data {

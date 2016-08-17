@@ -86,6 +86,27 @@ namespace stone {
         }
 
         void visit(IndexPostfixAST *ast) {
+            DataPtrPtr arrayPtrPtr = m_returnedData;
+            if ((*arrayPtrPtr) && (*arrayPtrPtr)->type() != Data::ARRAY) { // TODO: ERROR
+                error(ast->pos().toString() + ": it is not an array");
+                return ;
+            }
+            ast->indexExpr()->accept(this);
+            DataPtrPtr indexPtrPtr = m_returnedData;
+            if ((*indexPtrPtr)->type() != Data::INT) { // TODO: ERROR
+                error(ast->pos().toString() + ": the index is invalid");
+                return ;
+            }
+            Data::ArrayDataPtr arrayDataPtr = Data::toArray(*arrayPtrPtr);
+            int index = Data::toInt(*indexPtrPtr)->value();
+            if (index < -arrayDataPtr->array()->size() || index >= arrayDataPtr->array()->size()) { // TODO: ERROR
+                error(ast->pos().toString() + ": the index is out of range");
+                return ;
+            }
+            if (index < 0) {
+                index += arrayDataPtr->array()->size();
+            }
+            m_returnedData = Data::DataPtrPtr(&(arrayDataPtr->array()->at(index)));
         }
 
         void visit(MemberPostfixAST *ast) {
@@ -99,7 +120,7 @@ namespace stone {
                 std::cerr << funcPtrPtr->get()->type() << std::endl;
                 error("it is not callable");
             } else { // TODO: initialize default parameters
-                Data::FuncDataPtr funcDataPtr = std::dynamic_pointer_cast<FuncData>(*funcPtrPtr);
+                Data::FuncDataPtr funcDataPtr = Data::toFunc(*funcPtrPtr);
                 EnvPtr outerEnv = funcDataPtr->env();
                 EnvPtr parentEnv = m_env;
                 EnvPtr newEnv = EnvPtr(new MapEnv(outerEnv, parentEnv));
@@ -147,7 +168,6 @@ namespace stone {
         }
 
         void visit(PrintStmtAST *ast) {
-            m_mayCreate = false;
             ast->expr()->accept(this);
             if (m_returnedData->get()->type() == Data::INT) {
                 std::cout << "STONE OUTPUT: "
