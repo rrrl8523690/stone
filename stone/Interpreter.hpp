@@ -185,9 +185,7 @@ namespace stone {
             Data::ArrayDataPtr arrayPtr(new ArrayData(exprs->size()));
             for (uint i = 0; i < exprs->size(); i++) {
                 exprs->at(i)->accept(this);
-//                arrayPtr->array()->append(m_returnedData);
-                arrayPtr->array()->at(i) = DataPtrPtr(new DataPtr(*m_returnedData));
-//                arrayPtr->array()->at(i) = *(new Data::DataPtr(*m_returnedData));
+                arrayPtr->array()->at(i) = m_returnedData;
             }
             m_returnedData = Data::DataPtrPtr(new DataPtr(arrayPtr));
         }
