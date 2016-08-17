@@ -37,6 +37,9 @@ namespace stone {
         };
 
         inline virtual DataType type() const = 0;
+        inline bool isBasicType() const {
+            return type() == INT || type() == FUNC;
+        }
 
         DataPtrPtr toDataPtrPtr() {
             std::shared_ptr<Data> tmp(this);
