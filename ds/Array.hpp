@@ -3,6 +3,7 @@
 #include "ds/AutoComparable.hpp"
 #include "common/Common.h"
 #include <iostream>
+#include <exception>
 #include <initializer_list>
 
 namespace ds {
@@ -117,8 +118,8 @@ namespace ds {
     template<class T>
     Array<T>::Array(const uint &initialSize) {
         initialize();
+        resize(initialSize);
         m_maxSize = initialSize;
-        resize(m_maxSize);
     }
 
     template<class T>
@@ -159,6 +160,7 @@ namespace ds {
             return;
         }
         T *newItemList = new T[newSize];
+
         for (uint i = 0; i < m_size && i < newSize; i++) {
             newItemList[i] = m_items[i];
         }

@@ -187,6 +187,9 @@ namespace stone {
                 } else if (firstToken->string() == ";") {
                     m_lexer->read();
                     return StmtAST::nullStmt();
+                } else if (firstToken->string() == "(") {
+                    result = new ExprStmtAST(parseExpr(0));
+                    expect(";");
                 }
             } else if (firstToken->type() == Token::NUM || firstToken->type() == Token::ID) { // TODO:
                 result = new ExprStmtAST(parseExpr(0));
@@ -240,7 +243,23 @@ namespace stone {
             }
             return t;
         }
-        
+
+        ArrayExprAST *parseArrayExpr() { // parse the array expression without the braces on both sides
+            Token *firstToken;
+            ArrayExprAST *result;
+            Array<ExprAST *> *exprs = new Array<ExprAST *>();
+            bool isFirst = true;
+            while (!m_lexer->isEnd() && m_lexer->peek(0)->string() != "]") {
+                if (!isFirst) {
+                    expect(",");
+                }
+                exprs->append(parseExpr(0));
+                isFirst = false;
+            }
+            result = new ArrayExprAST(exprs);
+            return result;
+        }
+
         ExprAST *parseP() {
             Token *firstToken = m_lexer->read();
             ExprAST *result = nullptr;
@@ -255,15 +274,21 @@ namespace stone {
                     }
                 } else { // TODO: error
                 }
-            } else if (firstToken->type() == Token::SYM) { // P -> "(" E ")" [Postfixes]
-                if (firstToken->string() == "(") {
-                    result = parseExpr(0);
-                    expect(")");
+            } else if (firstToken->type() == Token::SYM) { // P -> "(" E ")" [Postfixes] or P -> "[" E, E, E... "]"
+                if (firstToken->string() == "(" || firstToken->string() == "[") {
+                    if (firstToken->string() == "(") {
+                        result = parseExpr(0);
+                        expect(")");
+                    } else if (firstToken->string() == "[") {
+                        result = parseArrayExpr();
+                        expect("]");
+                    }
                     PostfixAST *postfix;
                     while ((postfix = parsePostfix()))
                         result->appendPostfix(postfix);
                 } else { // TODO: error
                 }
+
             } else if (firstToken->type() == Token::ID) { // P -> v [Postfixes]
                 result = new VarAST(firstToken->string(), firstToken->codePosition());
                 PostfixAST *postfix;

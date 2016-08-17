@@ -16,6 +16,7 @@ namespace stone {
     class Interpreter : virtual public ASTVisitor {
     public:
         using EnvPtr = std::shared_ptr<Env>;
+        using DataPtr = Data::DataPtr;
         using DataPtrPtr = Data::DataPtrPtr;
 
         Interpreter(EnvPtr env_ = EnvPtr(new MapEnv(nullptr, nullptr)))
@@ -87,26 +88,27 @@ namespace stone {
 
         void visit(IndexPostfixAST *ast) {
             DataPtrPtr arrayPtrPtr = m_returnedData;
-            if ((*arrayPtrPtr) && (*arrayPtrPtr)->type() != Data::ARRAY) { // TODO: ERROR
+            if (!(*arrayPtrPtr) || (*arrayPtrPtr)->type() != Data::ARRAY) { // TODO: ERROR
                 error(ast->pos().toString() + ": it is not an array");
-                return ;
+                return;
             }
             ast->indexExpr()->accept(this);
             DataPtrPtr indexPtrPtr = m_returnedData;
             if ((*indexPtrPtr)->type() != Data::INT) { // TODO: ERROR
                 error(ast->pos().toString() + ": the index is invalid");
-                return ;
+                return;
             }
             Data::ArrayDataPtr arrayDataPtr = Data::toArray(*arrayPtrPtr);
             int index = Data::toInt(*indexPtrPtr)->value();
-            if (index < -arrayDataPtr->array()->size() || index >= arrayDataPtr->array()->size()) { // TODO: ERROR
-                error(ast->pos().toString() + ": the index is out of range");
-                return ;
+            if (index < -(int) (arrayDataPtr->array()->size()) ||
+                index >= arrayDataPtr->array()->size()) { // TODO: ERROR
+                error(ast->pos().toString() + ": the index " + String<>::number(index) + " is out of range");
+                return;
             }
             if (index < 0) {
                 index += arrayDataPtr->array()->size();
             }
-            m_returnedData = Data::DataPtrPtr(&(arrayDataPtr->array()->at(index)));
+            m_returnedData = arrayDataPtr->array()->at(index);
         }
 
         void visit(MemberPostfixAST *ast) {
@@ -176,6 +178,18 @@ namespace stone {
             } else {
                 error("Cannot print, type error");
             }
+        }
+
+        void visit(ArrayExprAST *ast) {
+            Array<ExprAST *> *exprs = ast->exprs();
+            Data::ArrayDataPtr arrayPtr(new ArrayData(exprs->size()));
+            for (uint i = 0; i < exprs->size(); i++) {
+                exprs->at(i)->accept(this);
+//                arrayPtr->array()->append(m_returnedData);
+                arrayPtr->array()->at(i) = DataPtrPtr(new DataPtr(*m_returnedData));
+//                arrayPtr->array()->at(i) = *(new Data::DataPtr(*m_returnedData));
+            }
+            m_returnedData = Data::DataPtrPtr(new DataPtr(arrayPtr));
         }
 
         void visit(BinaryOpAST *ast) {

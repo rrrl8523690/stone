@@ -95,23 +95,23 @@ namespace stone {
 
     class ArrayData : public Data {
     public:
-       ArrayData(int initialSize = 0) {
-            m_array = new Array<DataPtr>(initialSize);
-        }
-
-        DataType type() const {
-            return ARRAY;
+        ArrayData(int initialSize = 0) : m_array(new Array<DataPtrPtr>(initialSize)) {
         }
 
         ~ArrayData() {
             delete m_array;
         }
 
-        Array<DataPtr> *array() {
+        DataType type() const {
+            return ARRAY;
+        }
+
+        Array<DataPtrPtr> *array() {
             return m_array;
         }
+
     private:
-        Array<DataPtr> *m_array;
+        Array<DataPtrPtr> *m_array;
     };
 
     class ObjData : public Data {

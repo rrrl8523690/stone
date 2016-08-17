@@ -392,6 +392,12 @@ namespace stone {
         virtual ~ArrayExprAST() {
         }
 
+        Array<ExprAST *> *exprs() {
+            return m_exprs;
+        }
+
+        void accept(ASTVisitor *visitor);
+
     private:
         Array<ExprAST *> *m_exprs;
     };
@@ -476,6 +482,8 @@ namespace stone {
 
         virtual void visit(IntLiteralAST *) = 0;
 
+        virtual void visit(ArrayExprAST *) = 0;
+
         virtual void visit(UnaryOpAST *) = 0;
 
         virtual void visit(VarAST *) = 0;
@@ -551,6 +559,10 @@ namespace stone {
     }
 
     void IntLiteralAST::accept(ASTVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    void ArrayExprAST::accept(ASTVisitor *visitor) {
         visitor->visit(this);
     }
 
