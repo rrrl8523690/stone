@@ -101,7 +101,7 @@ namespace stone {
             Data::ArrayDataPtr arrayDataPtr = Data::toArray(*arrayPtrPtr);
             int index = Data::toInt(*indexPtrPtr)->value();
             if (index < -(int) (arrayDataPtr->array()->size()) ||
-                index >= arrayDataPtr->array()->size()) { // TODO: ERROR
+                index >= (int)arrayDataPtr->array()->size()) { // TODO: ERROR
                 error(ast->pos().toString() + ": the index " + String<>::number(index) + " is out of range");
                 return;
             }
