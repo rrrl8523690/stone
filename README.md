@@ -1,1 +1,1 @@
-# the interpreter of a stone-like language
+# An interpreter of a stone-like language
