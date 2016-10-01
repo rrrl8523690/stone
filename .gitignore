@@ -226,3 +226,5 @@ ModelManifest.xml
 *.xml
 
 *.py
+
+.DS_Store
